@@ -7,6 +7,17 @@
     "paths": {
         "/create_stemcell": {
             "post": {
+                "summary": "Create stemcell",
+                "tags": [
+                    "method",
+                    "required",
+                    "cli",
+                    "stemcell"
+                ],
+                "externalDocs": {
+                    "description": "light stemcell",
+                    "url": "https://bosh.io/docs/stemcell.html"
+                },
                 "description": "Creates a reusable VM image in the IaaS from the stemcell image. \nIt's used later for creating VMs. For example AWS CPI creates an AMI and returns AMI ID.\n",
                 "parameters": [
                     {
