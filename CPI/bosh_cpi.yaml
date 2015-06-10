@@ -1,0 +1,28 @@
+swagger: '2.0'
+info:
+  version: "0.0.1"
+  title: Bosh external CPI API
+paths:
+ /create_stemcell:
+  post:
+    description: |
+      Creates a reusable VM image in the IaaS from the stemcell image. 
+      It's used later for creating VMs. For example AWS CPI creates an AMI and returns AMI ID.
+    parameters:
+      - name: image_path
+        in: query
+        description: |
+         path to the stemcell image on a local FS extracted from the stemcell tarball
+        required: true
+        type: string
+      - name: cloud_properties  
+        in: query
+        description: |
+         cloud properties hash extracted from the stemcell tarball
+        required: true
+        type: string
+    responses:
+      default:
+       description: Stemcell CID
+       schema:
+        type: string
