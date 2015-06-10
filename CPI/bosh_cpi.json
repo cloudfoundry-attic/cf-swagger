@@ -49,6 +49,39 @@
                     }
                 }
             }
+        },
+        "/delete_stemcell": {
+            "delete": {
+                "summary": "Delete stemcell",
+                "tags": [
+                    "method",
+                    "required",
+                    "cli",
+                    "stemcell"
+                ],
+                "externalDocs": {
+                    "description": "Golang example",
+                    "url": "https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/delete_stemcell.go"
+                },
+                "description": "Deletes previously created stemcell. Assume that none of the VMs require presence of the stemcell.\n",
+                "parameters": [
+                    {
+                        "name": "stemcell_id",
+                        "in": "query",
+                        "description": "cloud ID of the stemcell to delete; returned from create_stemcell\n",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "No return value",
+                        "schema": {
+                            "$ref": "#/definitions/Empty"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -65,6 +98,9 @@
             }
         },
         "StemcellID": {
+            "type": "string"
+        },
+        "Empty": {
             "type": "string"
         }
     }

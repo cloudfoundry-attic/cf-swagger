@@ -2,6 +2,7 @@ swagger: '2.0'
 info:
   version: "0.0.1"
   title: Bosh external CPI API
+
 paths:
  /create_stemcell:
   post:
@@ -27,7 +28,7 @@ paths:
          path to the stemcell image on a local FS extracted from the stemcell tarball
         required: true
         type: string
-      - name: cloud_properties  
+      - name: cloud_properties
         in: body
         description: |
          cloud properties hash extracted from the stemcell tarball
@@ -41,6 +42,33 @@ paths:
        description: Stemcell CID
        schema:
         $ref: '#/definitions/StemcellID'
+
+ /delete_stemcell:
+  delete:
+    summary: Delete stemcell
+    tags:
+      - method
+      - required
+      - cli
+      - stemcell
+    externalDocs:
+      description: Golang example
+      url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/delete_stemcell.go
+    description: |
+      Deletes previously created stemcell. Assume that none of the VMs require presence of the stemcell.
+    parameters:
+      - name: stemcell_id
+        in: query
+        description: |
+         cloud ID of the stemcell to delete; returned from create_stemcell
+        required: true
+        type: string
+    responses:
+      default:
+        description: No return value
+        schema:
+          $ref: '#/definitions/Empty'
+
 definitions:
   PropertyItem:
     properties:
@@ -51,4 +79,6 @@ definitions:
         type: string
         description: The property value.
   StemcellID:
+    type: string
+  Empty:
     type: string
