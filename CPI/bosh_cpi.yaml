@@ -41,7 +41,78 @@ paths:
        description: Stemcell CID
        schema:
         $ref: '#/definitions/StemcellID'
-        
+
+ /delete_stemcell:
+  delete:
+    summary: Delete stemcell
+    tags:
+      - method
+      - required
+      - cli
+      - stemcell
+    externalDocs:
+      description: Golang example
+      url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/delete_stemcell.go
+    description: |
+      Deletes previously created stemcell. Assume that none of the VMs require presence of the stemcell.
+    parameters:
+      - name: stemcell_id
+        in: query
+        description: |
+         cloud ID of the stemcell to delete; returned from create_stemcell
+        required: true
+        type: string
+    responses:
+      default:
+        description: No return value
+        schema:
+          $ref: '#/definitions/Empty'
+
+ /create_vm:
+  post:
+    summary: Create VM
+    tags:
+      - method
+      - required
+      - cli
+      - vm
+    externalDocs:
+      description: Golang example
+      url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/create_vm.go
+    description: |
+      Creates a new VM based on the stemcell. Created VM must be accessible on the provided networks.
+      Make sure to properly delete created resources if VM cannot be successfully created.
+      Agent communication
+      For the BOSH Agent to successfully start on the created VM, several communication 
+      settings must be exposed which include network configuration, message bus location, 
+      agent id, etc. Each infrastructure might have a different way of exposing such settings. 
+      For example AWS CPI uses instance user metadata and BOSH Registry. vSphere CPI uses CDROM 
+      drive. Most CPIs choose to communicate with default BOSH Agent hence communication settings 
+      follow certain format: BOSH Agent infrastructure settings
+    parameters:
+      - name: agent_id
+        in: query
+        description: |
+          id selected by the BOSH Director for the VM's agent
+        required: true
+        type: string
+      - name: stemcell_cid
+        in: query
+        description: |
+          cloud ID of the stemcell to use as a base image for new VM
+        required: true
+        type: string
+      - name: create_vm
+        in: body
+        required: true
+        schema:
+            $ref: '#/definitions/CreateVM'
+    responses:
+      default:
+       description: VM CID
+       schema:
+        $ref: '#/definitions/VMID'
+
  /configure_network:
   post:
     summary: Configure Network
@@ -86,7 +157,6 @@ paths:
       schema:
         $ref: '#/definitions/Empty'
 
-        
  /create_disk:
   post:
     summary: Create Disk
@@ -119,7 +189,7 @@ paths:
        description: cloud ID of the created disk
        schema:
         $ref: '#/definitions/DiskCID'
- 
+
  /delete_disk:
   post:
     summary: Delete Disk
@@ -168,7 +238,8 @@ paths:
      default:
       description: returns true if disk is present
       schema:
-        $ref: '#/definitions/Exists'
+       $ref: '#/definitions/Exists'
+
  /attach_disk:
   post:
     summary: Attach Disk
@@ -190,20 +261,18 @@ paths:
          it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
-        
       - name: disk_cid
         in: query
         description: |
          Cloud ID of the disk to delete returned from create_disk
         required: true
         type: integer
-        
- 
     responses:
      default:
       description: No return value
       schema:
-        $ref: '#/definitions/Empty'  
+        $ref: '#/definitions/Empty'
+
  /detach_disk:
   post:
     summary: Detaches disk from the VM.
@@ -225,21 +294,18 @@ paths:
          it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
-        
       - name: disk_cid
         in: query
         description: |
          Cloud ID of the disk to delete returned from create_disk
         required: true
         type: integer
-        
- 
     responses:
      default:
       description: No return value
       schema:
         $ref: '#/definitions/Empty'  
-        
+
  /get_disks:
   post:
     summary: Get Disks.
@@ -258,7 +324,6 @@ paths:
          it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
- 
     responses:
      default:
       description:  Array of disk_cids that are currently attached to the VM
@@ -266,7 +331,7 @@ paths:
         type: array
         items:
           $ref: '#/definitions/DiskCID'        
-        
+
 definitions:
   PropertyItem:
     properties:
@@ -276,10 +341,49 @@ definitions:
       value:
         type: string
         description: The property value.
+  CreateVM:
+    properties:
+      cloud_properties:
+        type: array
+        description: |
+         cloud properties hash extracted from the stemcell tarball
+        items:
+          $ref: '#/definitions/PropertyItem'
+      networks:
+        type: array
+        description: |
+          networks hash that specifies which VM networks must be configured (e.g. {'net1': { ... }, 'net2': { ... }}
+        items:
+          $ref: '#/definitions/NetworkItem'
+      disk_cids:
+        description: |
+          array of disk_cids for each disk that created VM will most likely be attached; 
+          they could be used to optimize VM placement so that disks are located nearby
+        type: array
+        items:
+          $ref: '#/definitions/DiskCID'
+      environment:
+        type: array
+        description: |
+          resource pool's env hash specified in deployment manifest
+        items:
+          $ref: '#/definitions/PropertyItem'
+  NetworkItem:
+    properties:
+      name:
+        type: string
+        description: the name the network
+      network:
+        type: array
+        description: a hash
+        items:
+          $ref: '#/definitions/PropertyItem'
   StemcellID:
     type: string
+  VMID:
+    type: string
   Network:
-    type: boolean
+    type: string
   DiskCID:
     type: string
   Empty:
