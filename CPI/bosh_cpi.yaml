@@ -113,6 +113,133 @@ paths:
        schema:
         $ref: '#/definitions/VMID'
 
+ /delete_vm:
+  post:
+    summary: Delete VM.
+    tags:
+      - method
+      - required
+      - cli
+      - vm
+    description: |
+     Deletes the VM. Assume that all disks were detached.
+     To avoid losing track of VMs, make sure to raise an error if VM deletion is not absolutely certain.
+    parameters:
+      - name: vm_cid  
+        in: query
+        description: |
+         cloud ID of the VM created disk will most likely be attached; 
+         it could be used to optimize disk placement so that disk is located near the VM
+        required: true
+        type: string
+    responses:
+     default:
+      description: No return value
+      schema:
+        $ref: '#/definitions/Empty'
+      
+ /has_vm:
+  post:
+    summary: Has VM.
+    tags:
+      - method
+      - required
+      - cli
+      - vm
+    description: |
+     Checks for VM presence.
+    parameters:
+      - name: vm_cid  
+        in: query
+        description: |
+         cloud ID of the VM created disk will most likely be attached; 
+         it could be used to optimize disk placement so that disk is located near the VM
+        required: true
+        type: string
+    responses:
+     default:
+      description: returns true if VM exists
+      schema:
+       $ref: '#/definitions/Exists'
+
+ /set_vm_metadata:
+  put:
+    summary: Set VM Metadata.
+    tags:
+      - method
+      - required
+      - cli
+      - vm
+    description: |
+     Sets VM's metadata.
+    parameters:
+      - name: vm_cid  
+        in: query
+        description: |
+         cloud ID of the VM created disk will most likely be attached; 
+         it could be used to optimize disk placement so that disk is located near the VM
+        required: true
+        type: string
+      - name: metadata
+        in: body
+        description: |
+         metadata hash
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: '#/definitions/PropertyItem'
+    responses:
+     default:
+      description: No return value
+      schema:
+        $ref: '#/definitions/Empty'
+
+ /create_vm:
+  post:
+    summary: Create VM
+    tags:
+      - method
+      - required
+      - cli
+      - vm
+    externalDocs:
+      description: Golang example
+      url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/create_vm.go
+    description: |
+      Creates a new VM based on the stemcell. Created VM must be accessible on the provided networks.
+      Make sure to properly delete created resources if VM cannot be successfully created.
+      Agent communication
+      For the BOSH Agent to successfully start on the created VM, several communication 
+      settings must be exposed which include network configuration, message bus location, 
+      agent id, etc. Each infrastructure might have a different way of exposing such settings. 
+      For example AWS CPI uses instance user metadata and BOSH Registry. vSphere CPI uses CDROM 
+      drive. Most CPIs choose to communicate with default BOSH Agent hence communication settings 
+      follow certain format: BOSH Agent infrastructure settings
+    parameters:
+      - name: agent_id
+        in: query
+        description: |
+          id selected by the BOSH Director for the VM's agent
+        required: true
+        type: string
+      - name: stemcell_cid
+        in: query
+        description: |
+          cloud ID of the stemcell to use as a base image for new VM
+        required: true
+        type: string
+      - name: create_vm
+        in: body
+        required: true
+        schema:
+            $ref: '#/definitions/CreateVM'
+    responses:
+      default:
+       description: VM CID
+       schema:
+        $ref: '#/definitions/VMID'
+
  /configure_network:
   post:
     summary: Configure Network
