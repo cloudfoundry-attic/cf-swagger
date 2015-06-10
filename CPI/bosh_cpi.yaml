@@ -2,7 +2,6 @@ swagger: '2.0'
 info:
   version: "0.0.1"
   title: Bosh external CPI API
-
 paths:
  /create_stemcell:
   post:
@@ -114,7 +113,234 @@ paths:
        schema:
         $ref: '#/definitions/VMID'
 
+ /configure_network:
+  post:
+    summary: Configure Network
+    tags:
+      - method
+      - required
+      - cli
+      - network
+    externalDocs:
+      description: Golang example
+      url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/configure_network.go
+    description: |
+      Modifies VM network configuration. Assume that VM can be either on or off. 
+      Some infrastructures do not support network reconfiguration while VM is powered on.
+      It's safe to power off the VM, then reconfigure networks and power it back on.
+      Waiting for the VM to finish powering on is not required because BOSH Director waits 
+      until VM's agent returns a ping via NATS.
+      For infrastructures that do support network reconfiguration or when VM 
+      cannot be reconfigured to a new state from its current state, Bosh::Clouds::NotSupported error
+      should be raised. BOSH Director will delete the VM (via delete_vm) and create a new VM with desired network
+      configuration (via create_vm).
+    parameters:
+      - name: vm_cid  
+        in: query
+        description: |
+         cloud ID of the VM created disk will most likely be attached; 
+         it could be used to optimize disk placement so that disk is located near the VM
+        required: true
+        type: string
+      - name: networks
+        in: body
+        description: |
+         array of network hashes that specify networks VM must be configured
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: '#/definitions/Network'
+    responses:
+     default:
+      description: No return value
+      schema:
+        $ref: '#/definitions/Empty'
+
+ /create_disk:
+  post:
+    summary: Create Disk
+    tags:
+      - method
+      - required
+      - cli
+      - disk
+    externalDocs:
+      description: Golang example
+      url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/create_disk.go  
+    description: |
+      Creates disk with specific size. Disk does not belong to any given VM.
+    parameters:
+      - name: size
+        in: query
+        description: |
+         size of the disk in MiB
+        required: true
+        type: integer
+      - name: vm_cid  
+        in: query
+        description: |
+         cloud ID of the VM created disk will most likely be attached; 
+         it could be used to optimize disk placement so that disk is located near the VM
+        required: true
+        type: string
+    responses:
+      default:
+       description: cloud ID of the created disk
+       schema:
+        $ref: '#/definitions/DiskCID'
+
+ /delete_disk:
+  post:
+    summary: Delete Disk
+    tags:
+      - method
+      - required
+      - cli
+      - disk
+    externalDocs:
+      description: Golang example
+      url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/delete_disk.go
+    description: |
+     Deletes disk. Assume that disk was detached from all VMs.
+     To avoid losing track of disks, make sure to raise an error if disk deletion is not absolutely certain.
+    parameters:
+      - name: disk_cid
+        in: query
+        description: |
+         Cloud ID of the disk to delete returned from create_disk
+        required: true
+        type: integer
+    responses:
+     default:
+      description: No return value
+      schema:
+        $ref: '#/definitions/Empty'
+
+ /has_disk:
+  post:
+    summary: Has Disk
+    tags:
+      - method
+      - required
+      - cli
+      - disk
+    description: |
+     Checks for disk presence.
+    parameters:
+      - name: disk_cid
+        in: query
+        description: |
+         Cloud ID of the disk to delete returned from create_disk
+        required: true
+        type: integer
+    responses:
+     default:
+      description: returns true if disk is present
+      schema:
+       $ref: '#/definitions/Exists'
+
+ /attach_disk:
+  post:
+    summary: Attach Disk
+    tags:
+      - method
+      - required
+      - cli
+      - disk
+    externalDocs:
+      description: Golang example
+      url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/attach_disk.go
+    description: |
+     Attaches disk to the VM.
+    parameters:
+      - name: vm_cid  
+        in: query
+        description: |
+         cloud ID of the VM created disk will most likely be attached; 
+         it could be used to optimize disk placement so that disk is located near the VM
+        required: true
+        type: string
+      - name: disk_cid
+        in: query
+        description: |
+         Cloud ID of the disk to delete returned from create_disk
+        required: true
+        type: integer
+    responses:
+     default:
+      description: No return value
+      schema:
+        $ref: '#/definitions/Empty'
+
+ /detach_disk:
+  post:
+    summary: Detaches disk from the VM.
+    tags:
+      - method
+      - required
+      - cli
+      - disk
+    externalDocs:
+      description: Golang example
+      url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/detach_disk.go  
+    description: |
+     Attaches disk to the VM.
+    parameters:
+      - name: vm_cid  
+        in: query
+        description: |
+         cloud ID of the VM created disk will most likely be attached; 
+         it could be used to optimize disk placement so that disk is located near the VM
+        required: true
+        type: string
+      - name: disk_cid
+        in: query
+        description: |
+         Cloud ID of the disk to delete returned from create_disk
+        required: true
+        type: integer
+    responses:
+     default:
+      description: No return value
+      schema:
+        $ref: '#/definitions/Empty'  
+
+ /get_disks:
+  post:
+    summary: Get Disks.
+    tags:
+      - method
+      - required
+      - cli
+      - disk
+    description: |
+     Returns list of disks currently attached to the VM.
+    parameters:
+      - name: vm_cid  
+        in: query
+        description: |
+         cloud ID of the VM created disk will most likely be attached; 
+         it could be used to optimize disk placement so that disk is located near the VM
+        required: true
+        type: string
+    responses:
+     default:
+      description:  Array of disk_cids that are currently attached to the VM
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/DiskCID'        
+
 definitions:
+  PropertyItem:
+    properties:
+      name:
+        type: string
+        description: The property name.
+      value:
+        type: string
+        description: The property value.
   CreateVM:
     properties:
       cloud_properties:
@@ -142,14 +368,6 @@ definitions:
           resource pool's env hash specified in deployment manifest
         items:
           $ref: '#/definitions/PropertyItem'
-  PropertyItem:
-    properties:
-      name:
-        type: string
-        description: The property name.
-      value:
-        type: string
-        description: The property value.
   NetworkItem:
     properties:
       name:
@@ -163,7 +381,11 @@ definitions:
     type: string
   VMID:
     type: string
+  Network:
+    type: string
   DiskCID:
     type: string
   Empty:
     type: string
+  Exists:
+    type: boolean
