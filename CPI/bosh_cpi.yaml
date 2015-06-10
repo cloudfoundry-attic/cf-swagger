@@ -16,13 +16,27 @@ paths:
         required: true
         type: string
       - name: cloud_properties  
-        in: query
+        in: body
         description: |
          cloud properties hash extracted from the stemcell tarball
         required: true
-        type: string
+        schema:
+          type: array
+          items:
+            $ref: '#/definitions/PropertyItem'
     responses:
       default:
        description: Stemcell CID
        schema:
+        $ref: '#/definitions/StemcellID'
+definitions:
+  PropertyItem:
+    properties:
+      name:
         type: string
+        description: The property name.
+      value:
+        type: string
+        description: The property value.
+  StemcellID:
+    type: string
