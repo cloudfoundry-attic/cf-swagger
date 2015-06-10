@@ -457,7 +457,98 @@ paths:
       schema:
         type: array
         items:
-          $ref: '#/definitions/DiskCID'        
+          $ref: '#/definitions/DiskCID' 
+
+ /snapshot_disk:
+  post:
+    summary: Snapshot Disk.
+    tags:
+      - method
+      - optional
+      - cli
+      - disk
+      - snapshot
+    description: |
+     Snapshots the disk.
+    parameters:
+      - name: disk_cid  
+        in: query
+        description: |
+         The disk CID
+        required: true
+        type: string
+    responses:
+     default:
+      description:  Snapshot CID
+      schema:
+        type: object
+        $ref: '#/definitions/SnapshotCID' 
+
+ /delete_snapshot:
+  post:
+    summary: Delete Snapshot.
+    tags:
+      - method
+      - optional
+      - cli
+      - snapshot
+    description: |
+     Deletes a snapshot.
+    parameters:
+      - name: snapshot_cid  
+        in: query
+        description: |
+         The snapshot CID
+        required: true
+        type: string
+    responses:
+     default:
+      description: No return value
+      schema:
+        $ref: '#/definitions/Empty' 
+
+ /current_vm_id:
+  post:
+    summary: Current VM ID.
+    tags:
+      - method
+      - optional
+      - cli
+      - vm
+    description: |
+     Snapshots the disk.
+    responses:
+     default:
+      description: VM ID
+      schema:
+        type: object
+        $ref: '#/definitions/VMID'
+
+ /ping:
+  post:
+    summary: Ping.
+    tags:
+      - method
+      - optional
+      - cli
+      - vm
+    description: |
+     Pings the VM.
+     parameters:
+      - name: vm_cid  
+        in: query
+        description: |
+         cloud ID of the VM created disk will most likely be attached; 
+         it could be used to optimize disk placement so that disk is located near the VM
+        required: true
+        type: string
+    responses:
+     default:
+      description: Ping data
+      schema:
+        type: object
+        $ref: '#/definitions/PingData'  
+      
 
 definitions:
   PropertyItem:
@@ -512,7 +603,11 @@ definitions:
     type: string
   DiskCID:
     type: string
+  SnapshotCID:
+    type: string
   Empty:
     type: string
   Exists:
     type: boolean
+  PingData:
+    type: string
