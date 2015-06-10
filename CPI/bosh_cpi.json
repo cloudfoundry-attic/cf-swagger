@@ -82,9 +82,89 @@
                     }
                 }
             }
+        },
+        "/create_vm": {
+            "post": {
+                "summary": "Create VM",
+                "tags": [
+                    "method",
+                    "required",
+                    "cli",
+                    "vm"
+                ],
+                "externalDocs": {
+                    "description": "Golang example",
+                    "url": "https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/create_vm.go"
+                },
+                "description": "Creates a new VM based on the stemcell. Created VM must be accessible on the provided networks.\nMake sure to properly delete created resources if VM cannot be successfully created.\nAgent communication\nFor the BOSH Agent to successfully start on the created VM, several communication \nsettings must be exposed which include network configuration, message bus location, \nagent id, etc. Each infrastructure might have a different way of exposing such settings. \nFor example AWS CPI uses instance user metadata and BOSH Registry. vSphere CPI uses CDROM \ndrive. Most CPIs choose to communicate with default BOSH Agent hence communication settings \nfollow certain format: BOSH Agent infrastructure settings\n",
+                "parameters": [
+                    {
+                        "name": "agent_id",
+                        "in": "query",
+                        "description": "id selected by the BOSH Director for the VM's agent\n",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "stemcell_cid",
+                        "in": "query",
+                        "description": "cloud ID of the stemcell to use as a base image for new VM\n",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "create_vm",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateVM"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "VM CID",
+                        "schema": {
+                            "$ref": "#/definitions/VMID"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "CreateVM": {
+            "properties": {
+                "cloud_properties": {
+                    "type": "array",
+                    "description": "cloud properties hash extracted from the stemcell tarball\n",
+                    "items": {
+                        "$ref": "#/definitions/PropertyItem"
+                    }
+                },
+                "networks": {
+                    "type": "array",
+                    "description": "networks hash that specifies which VM networks must be configured (e.g. {'net1': { ... }, 'net2': { ... }}\n",
+                    "items": {
+                        "$ref": "#/definitions/NetworkItem"
+                    }
+                },
+                "disk_cids": {
+                    "description": "array of disk_cids for each disk that created VM will most likely be attached; \nthey could be used to optimize VM placement so that disks are located nearby\n",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/DiskCID"
+                    }
+                },
+                "environment": {
+                    "type": "array",
+                    "description": "resource pool's env hash specified in deployment manifest\n",
+                    "items": {
+                        "$ref": "#/definitions/PropertyItem"
+                    }
+                }
+            }
+        },
         "PropertyItem": {
             "properties": {
                 "name": {
@@ -97,7 +177,26 @@
                 }
             }
         },
+        "NetworkItem": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The nework name."
+                },
+                "value": {
+                    "type": "object",
+                    "description": "The network value (TODO needs to be a hash).",
+                    "$ref": "#/definitions/PropertyItem"
+                }
+            }
+        },
         "StemcellID": {
+            "type": "string"
+        },
+        "VMID": {
+            "type": "string"
+        },
+        "DiskCID": {
             "type": "string"
         },
         "Empty": {
