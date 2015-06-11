@@ -2,6 +2,7 @@ swagger: '2.0'
 info:
   version: "0.0.1"
   title: Bosh external CPI API
+host: cli.localtion.com
 paths:
  /create_stemcell:
   post:
