@@ -2,7 +2,7 @@ swagger: '2.0'
 info:
   version: "0.0.1"
   title: Bosh external CPI API
-host: cli.localtion.com
+host: localhost:8081
 paths:
  /create_stemcell:
   post:
@@ -115,7 +115,7 @@ paths:
         $ref: '#/definitions/VMID'
 
  /delete_vm:
-  post:
+  delete:
     summary: Delete VM.
     tags:
       - method
@@ -140,7 +140,7 @@ paths:
         $ref: '#/definitions/Empty'
       
  /has_vm:
-  post:
+  get:
     summary: Has VM.
     tags:
       - method
@@ -242,7 +242,7 @@ paths:
         $ref: '#/definitions/VMID'
 
  /configure_network:
-  post:
+  put:
     summary: Configure Network
     tags:
       - method
@@ -319,7 +319,7 @@ paths:
         $ref: '#/definitions/DiskCID'
 
  /delete_disk:
-  post:
+  delete:
     summary: Delete Disk
     tags:
       - method
@@ -346,7 +346,7 @@ paths:
         $ref: '#/definitions/Empty'
 
  /has_disk:
-  post:
+  get:
     summary: Has Disk
     tags:
       - method
@@ -369,7 +369,7 @@ paths:
        $ref: '#/definitions/Exists'
 
  /attach_disk:
-  post:
+  put:
     summary: Attach Disk
     tags:
       - method
@@ -402,7 +402,7 @@ paths:
         $ref: '#/definitions/Empty'
 
  /detach_disk:
-  post:
+  put:
     summary: Detaches disk from the VM.
     tags:
       - method
@@ -435,7 +435,7 @@ paths:
         $ref: '#/definitions/Empty'  
 
  /get_disks:
-  post:
+  get:
     summary: Get Disks.
     tags:
       - method
@@ -486,7 +486,7 @@ paths:
         $ref: '#/definitions/SnapshotCID' 
 
  /delete_snapshot:
-  post:
+  delete:
     summary: Delete Snapshot.
     tags:
       - method
@@ -509,7 +509,7 @@ paths:
         $ref: '#/definitions/Empty' 
 
  /current_vm_id:
-  post:
+  get:
     summary: Current VM ID.
     tags:
       - method
@@ -526,7 +526,7 @@ paths:
         $ref: '#/definitions/VMID'
 
  /ping:
-  post:
+  get:
     summary: Ping.
     tags:
       - method
