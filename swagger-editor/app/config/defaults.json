@@ -1,0 +1,33 @@
+{
+  "codegen": {
+    "servers": "http://generator.swagger.io/api/gen/servers",
+    "clients": "http://generator.swagger.io/api/gen/clients",
+    "server": "http://generator.swagger.io/api/gen/servers/{language}",
+    "client": "http://generator.swagger.io/api/gen/clients/{language}"
+  },
+  "analytics": {
+    "google": {
+      "id": "UA-51231036-1"
+    }
+  },
+  "disableCodeGen": true,
+  "examplesFolder": "/spec-files/",
+  "editorOptions": {
+    "theme": "ace/theme/atom_dark"
+  },
+  "exampleFiles": [
+    "default.yaml"
+  ],
+  "autocompleteExtension": {},
+  "useBackendForStorage": false,
+  "backendThrottle": 200,
+  "keyPressDebounceTime": 200,
+  "backendEndpoint": "/editor/spec",
+  "backendHealthCheckTimeout": 5000,
+  "useYamlBackend": false,
+  "disableFileMenu": true,
+  "headerBranding": false,
+  "enableTryIt": false,
+  "brandingCssClass": "",
+  "importProxyUrl": ""
+}
