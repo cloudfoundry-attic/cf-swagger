@@ -1,0 +1,9 @@
+{
+  "method": "delete_vm",
+  "arguments": [
+    "454cac10-c0fc-4ec8-63c5-7e6c802c84f5"
+  ],
+  "context": {
+    "director_uuid": "c37383cd-d5a8-43d7-b595-2ede9513c858"
+  }
+}

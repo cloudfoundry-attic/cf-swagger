@@ -1,0 +1,9 @@
+{
+  "method": "snapshot_disk",
+  "arguments": [
+    "1c244646-cb52-43b7-51b3-8219770d5e53"
+  ],
+  "context": {
+    "director_uuid": "c37383cd-d5a8-43d7-b595-2ede9513c858"
+  }
+}

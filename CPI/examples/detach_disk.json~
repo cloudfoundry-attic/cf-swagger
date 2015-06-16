@@ -1,0 +1,10 @@
+{
+  "method": "detach_disk",
+  "arguments": [
+    "2a33ae02-b70a-4faa-5059-e31b2548c793",
+    "1c244646-cb52-43b7-51b3-8219770d5e53"
+  ],
+  "context": {
+    "director_uuid": "c37383cd-d5a8-43d7-b595-2ede9513c858"
+  }
+}

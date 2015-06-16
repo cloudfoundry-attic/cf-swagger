@@ -1,0 +1,6 @@
+{
+"method":"attach_disk",
+"arguments":["1fe15531-d271-47b4-43ee-9b0ce9180e5f","c625bd75-24ba-40ef-7429-691aaa307e21"],
+"context":{"director_uuid":"c37383cd-d5a8-43d7-b595-2ede9513c858"}
+}
+

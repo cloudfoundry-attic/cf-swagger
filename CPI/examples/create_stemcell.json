@@ -1,0 +1,16 @@
+{
+  "method": "create_stemcell",
+  "arguments": [
+    "/var/vcap/data/tmp/director/stemcell20150616-2069-131jrsy/image",
+    {
+      "name": "bosh-warden-boshlite-ubuntu-trusty-go_agent",
+      "version": "389",
+      "infrastructure": "warden",
+      "architecture": "x86_64",
+      "root_device_name": "/dev/sda1"
+    }
+  ],
+  "context": {
+    "director_uuid": "c37383cd-d5a8-43d7-b595-2ede9513c858"
+  }
+}
