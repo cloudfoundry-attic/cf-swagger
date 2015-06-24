@@ -1,0 +1,144 @@
+
+  <ul class='operations' >
+    <li class='{{method}} operation' id='{{parentId}}_{{nickname}}'>
+      <div class='heading'>
+        <h3>
+          <span class='http_method'>
+          <a href='#!/{{encodedParentId}}/{{nickname}}' class="toggleOperation">{{method}}</a>
+          </span>
+          <span class='path'>
+          <a href='#!/{{encodedParentId}}/{{nickname}}' class="toggleOperation {{#if deprecated}}deprecated{{/if}}">{{path}}</a>
+          </span>
+        </h3>
+        <ul class='options'>
+          <li>
+          <a href='#!/{{encodedParentId}}/{{nickname}}' class="toggleOperation">{{{summary}}}</a>
+          </li>
+        </ul>
+      </div>
+      <div class='content' id='{{parentId}}_{{nickname}}_content' style='display:none'>
+        {{#if deprecated}}
+            <h4>Warning: Deprecated</h4>
+        {{/if}}
+        {{#if description}}
+        <h4>Implementation Notes</h4>
+        <div class="markdown">{{{description}}}</div>
+        {{/if}}
+        {{#oauth}}
+        <div class="auth">
+        <span class="api-ic ic-error"></span>{{/oauth}}
+        {{#each oauth}}
+          <div id="api_information_panel" style="top: 526px; left: 776px; display: none;">
+          {{#each this}}
+            <div title='{{{this.description}}}'>{{this.scope}}</div>
+          {{/each}}
+          </div>
+        {{/each}}
+        {{#oauth}}</div>{{/oauth}}
+        {{#oauth}}
+        <div class='access'>
+          <span class="api-ic ic-off" title="click to authenticate"></span>
+        </div>
+        {{/oauth}}
+        {{#if type}}
+          <h4>Example</h4>
+          
+           <a href="https://raw.githubusercontent.com/maximilien/bosh-softlayer-cpi/master/test_fixtures/cpi_methods/create_vm.json">create_vm</a>
+			<div >
+			<div style="display: block;" class="snippet">
+    <pre><code class="json">[
+  {
+    "<span class="attribute"><span class="attribute">4dcd7c94-cbc0-48ce-879c-e012d110d7f5</span>",
+    "<span class="attribute"><span class="attribute">3ed54f9b-3269-437f-7cfd-d8ae3e136aee</span></span>",</br> <span class="value"><span class="value">{
+      {"<span class="attribute"><span class="attribute">name</span></span>": <span class="value"><span class="number"><span class="value"><span class="number">random</span></span></span></span>},
+      {"<span class="attribute"><span class="attribute">cf1</span></span>": {<span class="value"><span class="string"><span class="value"><span class="string">"string"</span></span></span><span class="value">
+    }</span></span></span><span class="value"></span></span>,
+    "<span class="attribute"><span class="attribute">name</span></span>":{ <span class="value"><span class="string"><span class="value"><span class="string">"ip":"10.244.0.146</span></span></span></span>,
+    "<span class="attribute"><span class="attribute">arguments</span></span>": <span class="value"><span class="value">[
+      <span class="string"><span class="string">"netmask":"255.255.255.252",</span></span>
+      <span class="string"><span class="string">"cloud_properties":{"name":"random"},</span></span>
+      <span class="string"><span class="string">"default":["dns","gateway"],</span></span>
+      <span class="string"><span class="string">"dns_record_name":"0.loggregator-trafficcontroller-z1.cf1.cf-warden.bosh"}},</span></span>
+      <span class="string"><span class="string">null,</span></span>
+      <span class="string"><span class="string">{"bosh":{"password":"$6$4gDD3aV0rdqlrKC$2axHCxGKIObs6tAmMTqYCspcdvQXh3JJcvWOY2WGb4SrdXtnCyNaWlrf3WEqvYR2MYizEGp3kMmbpwBC6jsHt0"}}],</span></span>
+      <span class="string"><span class="string">"context":{"director_uuid":"c37383cd-d5a8-43d7-b595-2ede9513c858"}</span></span>
+	
+]</code></pre>
+    <small class="notice"></small>
+  </div>
+		</div>
+		
+		
+		
+          
+          <br/>
+                  
+          <h4>Response Class (Status {{successCode}})</h4>
+          <p><span class="model-signature" /></p>
+          <br/>
+          <div class="response-content-type" />
+        {{/if}}
+        <form accept-charset='UTF-8' class='sandbox'>
+          <div style='margin:0;padding:0;display:inline'></div>
+          {{#if parameters}}
+          <h4>Parameters</h4>
+          <table class='fullwidth'>
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px">Parameter</th>
+            <th style="width: 310px; max-width: 310px">Value</th>
+            <th style="width: 200px; max-width: 200px">Description</th>
+            <th style="width: 100px; max-width: 100px">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          </tbody>
+          </table>
+          {{/if}}
+          {{#if responseMessages}}
+          <div style='margin:0;padding:0;display:inline'></div>
+          <h4>Response Messages</h4>
+          <table class='fullwidth'>
+            <thead>
+            <tr>
+              <th>HTTP Status Code</th>
+              <th>Reason</th>
+              <th>Response Model</th>
+              <th>Headers</th>
+            </tr>
+            </thead>
+            <tbody class="operation-status">
+
+            </tbody>
+          </table>
+          {{/if}}
+          {{#if isReadOnly}}
+          {{else}}
+          <div class='sandbox_header'>
+            <input class='submit' type='button' value='Try it out!' />
+            <a href='#' class='response_hider' style='display:none'>Hide Response</a>
+            <span class='response_throbber' style='display:none'></span>
+          </div>
+          {{/if}}
+        </form>
+        <div class='response' style='display:none'>
+          <h4>Curl</h4>
+          <div class='block curl'></div>
+          <h4>Request URL</h4>
+          <div class='block request_url'></div>
+          {{#if showRequestHeaders}}
+          <h4>Request Headers</h4>
+          <div class='block request_headers'></div>
+          {{/if}}
+          <h4>Response Body</h4>
+          <div class='block response_body'></div>
+          <h4>Response Code</h4>
+          <div class='block response_code'></div>
+          <h4>Response Headers</h4>
+          <div class='block response_headers'></div>
+        </div>
+      </div>
+    </li>
+  </ul>
