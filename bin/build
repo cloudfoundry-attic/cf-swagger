@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 set -e
 
+export GOPATH=$(pwd)/../../../../
 export GOPATH=$(godep path):$GOPATH
 
 echo "Swagger generating code"
 
-mkdir -p ../bosh-go-server
-swagger generate server -f ../cpi/bosh_cpi.json -A bosh-go-server
+mkdir -p generated_server
+cd generated_server
+swagger generate server -f  ../cpi/bosh_cpi.json -A bosh-cpi
+cd -
 
 echo -e "\n Formatting packages..."
 go fmt ./...
 
 echo -e "\nGenerating Binary..."
-go build -o $(dirname $0)/../out/bosh-go-server ./main/slgo.go
+go build -o $(dirname $0)/../out/cpi-server ./generated_server/cmd/bosh-cpi-server/main.go

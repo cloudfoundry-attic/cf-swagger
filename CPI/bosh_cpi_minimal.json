@@ -1,0 +1,44 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.1",
+        "title": "Bosh external CPI API"
+    },
+    "host": "localhost:8081",
+    "paths": {
+        "/has_vm": {
+            "get": {
+                "summary": "Has VM.",
+                "tags": [
+                    "method",
+                    "required",
+                    "cli",
+                    "vm"
+                ],
+                "description": "Checks for VM presence.\n",
+                "parameters": [
+                    {
+                        "name": "vm_cid",
+                        "in": "query",
+                        "description": "cloud ID of the VM created disk will most likely be attached; \nit could be used to optimize disk placement so that disk is located near the VM\n",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "returns true if VM exists",
+                        "schema": {
+                            "$ref": "#/definitions/Exists"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Exists": {
+            "type": "boolean"
+        }
+    }
+}
