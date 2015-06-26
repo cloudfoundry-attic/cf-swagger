@@ -8,7 +8,7 @@ echo "Swagger generating code"
 
 mkdir -p generated_server
 cd generated_server
-swagger generate server -f  ../cpi/bosh_cpi.json -A bosh-cpi
+swagger generate server -f  ../cpi/bosh_cpi_minimal.json -A bosh-cpi
 cd -
 
 echo -e "\n Formatting packages..."
