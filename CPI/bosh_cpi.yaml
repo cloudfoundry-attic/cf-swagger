@@ -3,9 +3,12 @@ info:
   version: "0.0.1"
   title: Bosh external CPI API
 host: localhost:8081
+schemes:
+  - http
 paths:
  /create_stemcell:
   post:
+    operationId: create_stemcell
     summary: Create stemcell
     tags:
       - method
@@ -19,8 +22,7 @@ paths:
       description: light stemcell
       url: https://bosh.io/docs/stemcell.html
     description: |
-      Creates a reusable VM image in the IaaS from the stemcell image. 
-      It's used later for creating VMs. For example AWS CPI creates an AMI and returns AMI ID.
+     Creates a reusable VM image in the IaaS from the stemcell image. It's used later for creating VMs. For example AWS CPI creates an AMI and returns AMI ID.
     parameters:
       - name: image_path
         in: query
@@ -45,6 +47,7 @@ paths:
 
  /delete_stemcell:
   delete:
+    operationId: delete_stemcell
     summary: Delete stemcell
     tags:
       - method
@@ -71,6 +74,7 @@ paths:
 
  /create_vm:
   post:
+    operationId: create_vm
     summary: Create VM
     tags:
       - method
@@ -81,14 +85,7 @@ paths:
       description: Golang example
       url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/create_vm.go
     description: |
-      Creates a new VM based on the stemcell. Created VM must be accessible on the provided networks.
-      Make sure to properly delete created resources if VM cannot be successfully created.
-      Agent communication
-      For the BOSH Agent to successfully start on the created VM, several communication 
-      settings must be exposed which include network configuration, message bus location, 
-      agent id, etc. Each infrastructure might have a different way of exposing such settings. 
-      For example AWS CPI uses instance user metadata and BOSH Registry. vSphere CPI uses CDROM 
-      drive. Most CPIs choose to communicate with default BOSH Agent hence communication settings 
+      Creates a new VM based on the stemcell. Created VM must be accessible on the provided networks. Make sure to properly delete created resources if VM cannot be successfully created. Agent communication For the BOSH Agent to successfully start on the created VM, several communication settings must be exposed which include network configuration, message bus location, agent id, etc. Each infrastructure might have a different way of exposing such settings. For example AWS CPI uses instance user metadata and BOSH Registry. vSphere CPI uses CDROM drive. Most CPIs choose to communicate with default BOSH Agent hence communication settings. 
       follow certain format: BOSH Agent infrastructure settings
     parameters:
       - name: agent_id
@@ -116,6 +113,7 @@ paths:
 
  /delete_vm:
   delete:
+    operationId: delete_vm
     summary: Delete VM.
     tags:
       - method
@@ -123,14 +121,12 @@ paths:
       - cli
       - vm
     description: |
-     Deletes the VM. Assume that all disks were detached.
-     To avoid losing track of VMs, make sure to raise an error if VM deletion is not absolutely certain.
+     Deletes the VM. Assume that all disks were detached. To avoid losing track of VMs, make sure to raise an error if VM deletion is not absolutely certain.
     parameters:
       - name: vm_cid  
         in: query
         description: |
-         cloud ID of the VM created disk will most likely be attached; 
-         it could be used to optimize disk placement so that disk is located near the VM
+         cloud ID of the VM created disk will most likely be attached; it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
     responses:
@@ -138,9 +134,10 @@ paths:
       description: No return value
       schema:
         $ref: '#/definitions/Empty'
-      
+
  /has_vm:
   get:
+    operationId: has_vm
     summary: Has VM.
     tags:
       - method
@@ -153,8 +150,7 @@ paths:
       - name: vm_cid  
         in: query
         description: |
-         cloud ID of the VM created disk will most likely be attached; 
-         it could be used to optimize disk placement so that disk is located near the VM
+         cloud ID of the VM created disk will most likely be attached; it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
     responses:
@@ -165,6 +161,7 @@ paths:
 
  /set_vm_metadata:
   put:
+    operationId: set_vm_metadata
     summary: Set VM Metadata.
     tags:
       - method
@@ -177,8 +174,7 @@ paths:
       - name: vm_cid  
         in: query
         description: |
-         cloud ID of the VM created disk will most likely be attached; 
-         it could be used to optimize disk placement so that disk is located near the VM
+         cloud ID of the VM created disk will most likely be attached; it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
       - name: metadata
@@ -198,6 +194,7 @@ paths:
 
  /create_vm:
   post:
+    operationId: create_vm
     summary: Create VM
     tags:
       - method
@@ -208,14 +205,7 @@ paths:
       description: Golang example
       url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/create_vm.go
     description: |
-      Creates a new VM based on the stemcell. Created VM must be accessible on the provided networks.
-      Make sure to properly delete created resources if VM cannot be successfully created.
-      Agent communication
-      For the BOSH Agent to successfully start on the created VM, several communication 
-      settings must be exposed which include network configuration, message bus location, 
-      agent id, etc. Each infrastructure might have a different way of exposing such settings. 
-      For example AWS CPI uses instance user metadata and BOSH Registry. vSphere CPI uses CDROM 
-      drive. Most CPIs choose to communicate with default BOSH Agent hence communication settings 
+      Creates a new VM based on the stemcell. Created VM must be accessible on the provided networks. Make sure to properly delete created resources if VM cannot be successfully created. Agent communication For the BOSH Agent to successfully start on the created VM, several communication settings must be exposed which include network configuration, message bus location, agent id, etc. Each infrastructure might have a different way of exposing such settings. For example AWS CPI uses instance user metadata and BOSH Registry. vSphere CPI uses CDROM drive. Most CPIs choose to communicate with default BOSH Agent hence communication settings. 
       follow certain format: BOSH Agent infrastructure settings
     parameters:
       - name: agent_id
@@ -243,6 +233,7 @@ paths:
 
  /configure_network:
   put:
+    operationId: configure_network
     summary: Configure Network
     tags:
       - method
@@ -253,21 +244,12 @@ paths:
       description: Golang example
       url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/configure_network.go
     description: |
-      Modifies VM network configuration. Assume that VM can be either on or off. 
-      Some infrastructures do not support network reconfiguration while VM is powered on.
-      It's safe to power off the VM, then reconfigure networks and power it back on.
-      Waiting for the VM to finish powering on is not required because BOSH Director waits 
-      until VM's agent returns a ping via NATS.
-      For infrastructures that do support network reconfiguration or when VM 
-      cannot be reconfigured to a new state from its current state, Bosh::Clouds::NotSupported error
-      should be raised. BOSH Director will delete the VM (via delete_vm) and create a new VM with desired network
-      configuration (via create_vm).
+      Modifies VM network configuration. Assume that VM can be either on or off. Some infrastructures do not support network reconfiguration while VM is powered on. It's safe to power off the VM, then reconfigure networks and power it back on. Waiting for the VM to finish powering on is not required because BOSH Director waits until VM's agent returns a ping via NATS. For infrastructures that do support network reconfiguration or when VM cannot be reconfigured to a new state from its current state, Bosh::Clouds::NotSupported error should be raised. BOSH Director will delete the VM (via delete_vm) and create a new VM with desired network configuration (via create_vm).
     parameters:
       - name: vm_cid  
         in: query
         description: |
-         cloud ID of the VM created disk will most likely be attached; 
-         it could be used to optimize disk placement so that disk is located near the VM
+         cloud ID of the VM created disk will most likely be attached; it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
       - name: networks
@@ -287,6 +269,7 @@ paths:
 
  /create_disk:
   post:
+    operationId: create_disk
     summary: Create Disk
     tags:
       - method
@@ -308,8 +291,7 @@ paths:
       - name: vm_cid  
         in: query
         description: |
-         cloud ID of the VM created disk will most likely be attached; 
-         it could be used to optimize disk placement so that disk is located near the VM
+         cloud ID of the VM created disk will most likely be attached; it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
     responses:
@@ -320,6 +302,7 @@ paths:
 
  /delete_disk:
   delete:
+    operationId: delete_disk
     summary: Delete Disk
     tags:
       - method
@@ -330,8 +313,7 @@ paths:
       description: Golang example
       url: https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/delete_disk.go
     description: |
-     Deletes disk. Assume that disk was detached from all VMs.
-     To avoid losing track of disks, make sure to raise an error if disk deletion is not absolutely certain.
+     Deletes disk. Assume that disk was detached from all VMs. To avoid losing track of disks, make sure to raise an error if disk deletion is not absolutely certain.
     parameters:
       - name: disk_cid
         in: query
@@ -347,6 +329,7 @@ paths:
 
  /has_disk:
   get:
+    operationId: has_disk
     summary: Has Disk
     tags:
       - method
@@ -370,6 +353,7 @@ paths:
 
  /attach_disk:
   put:
+    operationId: attach_disk
     summary: Attach Disk
     tags:
       - method
@@ -385,8 +369,7 @@ paths:
       - name: vm_cid  
         in: query
         description: |
-         cloud ID of the VM created disk will most likely be attached; 
-         it could be used to optimize disk placement so that disk is located near the VM
+         cloud ID of the VM created disk will most likely be attached;  it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
       - name: disk_cid
@@ -403,6 +386,7 @@ paths:
 
  /detach_disk:
   put:
+    operationId: detach_disk
     summary: Detaches disk from the VM.
     tags:
       - method
@@ -418,8 +402,7 @@ paths:
       - name: vm_cid  
         in: query
         description: |
-         cloud ID of the VM created disk will most likely be attached; 
-         it could be used to optimize disk placement so that disk is located near the VM
+         cloud ID of the VM created disk will most likely be attached; it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
       - name: disk_cid
@@ -436,6 +419,7 @@ paths:
 
  /get_disks:
   get:
+    operationId: get_disks
     summary: Get Disks.
     tags:
       - method
@@ -448,8 +432,7 @@ paths:
       - name: vm_cid  
         in: query
         description: |
-         cloud ID of the VM created disk will most likely be attached; 
-         it could be used to optimize disk placement so that disk is located near the VM
+         cloud ID of the VM created disk will most likely be attached; it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
     responses:
@@ -462,6 +445,7 @@ paths:
 
  /snapshot_disk:
   post:
+    operationId: snapshot_disk
     summary: Snapshot Disk.
     tags:
       - method
@@ -487,6 +471,7 @@ paths:
 
  /delete_snapshot:
   delete:
+    operationId: delete_snapshot
     summary: Delete Snapshot.
     tags:
       - method
@@ -510,6 +495,7 @@ paths:
 
  /current_vm_id:
   get:
+    operationId: current_vm_id
     summary: Current VM ID.
     tags:
       - method
@@ -527,6 +513,7 @@ paths:
 
  /ping:
   get:
+    operationId: ping
     summary: Ping.
     tags:
       - method
@@ -539,8 +526,7 @@ paths:
       - name: vm_cid  
         in: query
         description: |
-         cloud ID of the VM created disk will most likely be attached; 
-         it could be used to optimize disk placement so that disk is located near the VM
+         cloud ID of the VM created disk will most likely be attached; it could be used to optimize disk placement so that disk is located near the VM
         required: true
         type: string
     responses:
@@ -548,8 +534,7 @@ paths:
       description: Ping data
       schema:
         type: object
-        $ref: '#/definitions/PingData'  
-      
+        $ref: '#/definitions/PingData'
 
 definitions:
   PropertyItem:
@@ -576,8 +561,7 @@ definitions:
           $ref: '#/definitions/NetworkItem'
       disk_cids:
         description: |
-          array of disk_cids for each disk that created VM will most likely be attached; 
-          they could be used to optimize VM placement so that disks are located nearby
+          array of disk_cids for each disk that created VM will most likely be attached; they could be used to optimize VM placement so that disks are located nearby
         type: array
         items:
           $ref: '#/definitions/DiskCID'

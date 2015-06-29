@@ -5,9 +5,13 @@
         "title": "Bosh external CPI API"
     },
     "host": "localhost:8081",
+    "schemes": [
+        "http"
+    ],
     "paths": {
         "/has_vm": {
             "get": {
+                "operationId": "has_vm",
                 "summary": "Has VM.",
                 "tags": [
                     "method",
@@ -20,7 +24,7 @@
                     {
                         "name": "vm_cid",
                         "in": "query",
-                        "description": "cloud ID of the VM created disk will most likely be attached; \nit could be used to optimize disk placement so that disk is located near the VM\n",
+                        "description": "cloud ID of the VM created disk will most likely be attached; it could be used to optimize disk placement so that disk is located near the VM\n",
                         "required": true,
                         "type": "string"
                     }
