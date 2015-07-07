@@ -10,13 +10,14 @@
       "id": "UA-51231036-1"
     }
   },
-  "disableCodeGen": true,
+  "disableCodeGen": false,
   "examplesFolder": "/spec-files/",
   "editorOptions": {
     "theme": "ace/theme/atom_dark"
   },
   "exampleFiles": [
-    "default.yaml"
+    "default.yaml",
+    "bosh_cpi.yaml"
   ],
   "autocompleteExtension": {},
   "useBackendForStorage": false,
@@ -25,7 +26,7 @@
   "backendEndpoint": "/editor/spec",
   "backendHealthCheckTimeout": 5000,
   "useYamlBackend": false,
-  "disableFileMenu": true,
+  "disableFileMenu": false,
   "headerBranding": false,
   "enableTryIt": false,
   "brandingCssClass": "",

@@ -8,18 +8,22 @@
     "schemes": [
         "http"
     ],
+    "basePath": "/v1",
     "paths": {
-        "/has_vm": {
+       "/has_vm": {
             "get": {
                 "operationId": "has_vm",
                 "summary": "Has VM.",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "vm"
                 ],
                 "description": "Checks for VM presence.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "vm_cid",

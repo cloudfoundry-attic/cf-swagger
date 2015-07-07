@@ -14,9 +14,6 @@
                 "operationId": "create_stemcell",
                 "summary": "Create stemcell",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "stemcell"
                 ],
                 "externalDocs": {
@@ -24,6 +21,12 @@
                     "url": "https://bosh.io/docs/stemcell.html"
                 },
                 "description": "Creates a reusable VM image in the IaaS from the stemcell image. It's used later for creating VMs. For example AWS CPI creates an AMI and returns AMI ID.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "image_path",
@@ -60,9 +63,6 @@
                 "operationId": "delete_stemcell",
                 "summary": "Delete stemcell",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "stemcell"
                 ],
                 "externalDocs": {
@@ -70,6 +70,12 @@
                     "url": "https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/delete_stemcell.go"
                 },
                 "description": "Deletes previously created stemcell. Assume that none of the VMs require presence of the stemcell.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "stemcell_id",
@@ -94,9 +100,6 @@
                 "operationId": "create_vm",
                 "summary": "Create VM",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "vm"
                 ],
                 "externalDocs": {
@@ -104,6 +107,12 @@
                     "url": "https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/create_vm.go"
                 },
                 "description": "Creates a new VM based on the stemcell. Created VM must be accessible on the provided networks. Make sure to properly delete created resources if VM cannot be successfully created. Agent communication For the BOSH Agent to successfully start on the created VM, several communication settings must be exposed which include network configuration, message bus location, agent id, etc. Each infrastructure might have a different way of exposing such settings. For example AWS CPI uses instance user metadata and BOSH Registry. vSphere CPI uses CDROM drive. Most CPIs choose to communicate with default BOSH Agent hence communication settings. \nfollow certain format: BOSH Agent infrastructure settings\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "agent_id",
@@ -143,12 +152,15 @@
                 "operationId": "delete_vm",
                 "summary": "Delete VM.",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "vm"
                 ],
                 "description": "Deletes the VM. Assume that all disks were detached. To avoid losing track of VMs, make sure to raise an error if VM deletion is not absolutely certain.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "vm_cid",
@@ -173,12 +185,15 @@
                 "operationId": "has_vm",
                 "summary": "Has VM.",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "vm"
                 ],
                 "description": "Checks for VM presence.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "vm_cid",
@@ -203,12 +218,15 @@
                 "operationId": "set_vm_metadata",
                 "summary": "Set VM Metadata.",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "vm"
                 ],
                 "description": "Sets VM's metadata.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "vm_cid",
@@ -245,9 +263,6 @@
                 "operationId": "configure_network",
                 "summary": "Configure Network",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "network"
                 ],
                 "externalDocs": {
@@ -255,6 +270,12 @@
                     "url": "https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/configure_network.go"
                 },
                 "description": "Modifies VM network configuration. Assume that VM can be either on or off. Some infrastructures do not support network reconfiguration while VM is powered on. It's safe to power off the VM, then reconfigure networks and power it back on. Waiting for the VM to finish powering on is not required because BOSH Director waits until VM's agent returns a ping via NATS. For infrastructures that do support network reconfiguration or when VM cannot be reconfigured to a new state from its current state, Bosh::Clouds::NotSupported error should be raised. BOSH Director will delete the VM (via delete_vm) and create a new VM with desired network configuration (via create_vm).\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "vm_cid",
@@ -291,9 +312,6 @@
                 "operationId": "create_disk",
                 "summary": "Create Disk",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "disk"
                 ],
                 "externalDocs": {
@@ -301,6 +319,12 @@
                     "url": "https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/create_disk.go"
                 },
                 "description": "Creates disk with specific size. Disk does not belong to any given VM.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "size",
@@ -332,9 +356,6 @@
                 "operationId": "delete_disk",
                 "summary": "Delete Disk",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "disk"
                 ],
                 "externalDocs": {
@@ -342,6 +363,12 @@
                     "url": "https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/delete_disk.go"
                 },
                 "description": "Deletes disk. Assume that disk was detached from all VMs. To avoid losing track of disks, make sure to raise an error if disk deletion is not absolutely certain.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "disk_cid",
@@ -366,12 +393,15 @@
                 "operationId": "has_disk",
                 "summary": "Has Disk",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "disk"
                 ],
                 "description": "Checks for disk presence.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "disk_cid",
@@ -396,9 +426,6 @@
                 "operationId": "attach_disk",
                 "summary": "Attach Disk",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "disk"
                 ],
                 "externalDocs": {
@@ -406,6 +433,12 @@
                     "url": "https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/attach_disk.go"
                 },
                 "description": "Attaches disk to the VM.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "vm_cid",
@@ -437,9 +470,6 @@
                 "operationId": "detach_disk",
                 "summary": "Detaches disk from the VM.",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "disk"
                 ],
                 "externalDocs": {
@@ -447,6 +477,12 @@
                     "url": "https://github.com/cppforlife/bosh-warden-cpi/blob/master/action/detach_disk.go"
                 },
                 "description": "Attaches disk to the VM.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "vm_cid",
@@ -478,12 +514,15 @@
                 "operationId": "get_disks",
                 "summary": "Get Disks.",
                 "tags": [
-                    "method",
-                    "required",
-                    "cli",
                     "disk"
                 ],
                 "description": "Returns list of disks currently attached to the VM.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "vm_cid",
@@ -511,13 +550,15 @@
                 "operationId": "snapshot_disk",
                 "summary": "Snapshot Disk.",
                 "tags": [
-                    "method",
-                    "optional",
-                    "cli",
-                    "disk",
                     "snapshot"
                 ],
                 "description": "Snapshots the disk.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "disk_cid",
@@ -543,12 +584,15 @@
                 "operationId": "delete_snapshot",
                 "summary": "Delete Snapshot.",
                 "tags": [
-                    "method",
-                    "optional",
-                    "cli",
                     "snapshot"
                 ],
                 "description": "Deletes a snapshot.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "snapshot_cid",
@@ -573,9 +617,6 @@
                 "operationId": "current_vm_id",
                 "summary": "Current VM ID.",
                 "tags": [
-                    "method",
-                    "optional",
-                    "cli",
                     "vm"
                 ],
                 "description": "Gets the VM ID.\n",
@@ -595,12 +636,15 @@
                 "operationId": "ping",
                 "summary": "Ping.",
                 "tags": [
-                    "method",
-                    "optional",
-                    "cli",
                     "vm"
                 ],
                 "description": "Pings the VM.\n",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
                 "parameters": [
                     {
                         "name": "vm_cid",
