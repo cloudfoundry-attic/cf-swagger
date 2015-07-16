@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -e
+
+export GOPATH=$(pwd)/../../../../
+#export GOPATH=$(godep path):$GOPATH
+
+#SWAGGER=$(which swagger)
+SWAGGER=../../../go-swagger/go-swagger/out/swagger
+
+echo "Swagger generating code"
+
+# mkdir -p generated_test
+# cd generated_test
+# $SWAGGER generate test -f  ../cpi/bosh_cpi.json -A bosh_cpi
+# cd -
+
+mkdir -p generated_broker_test
+cd generated_broker_test
+$SWAGGER generate test -f  ../broker/broker.json -A broker
+cd -
+
+echo -e "\n Formatting packages..."
+go fmt ./...
+
+echo -e "\n Running ginkgo on generated tests"
+ginkgo -r generated_broker_test
