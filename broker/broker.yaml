@@ -99,6 +99,7 @@ paths:
   parameters:
    - $ref: "#/parameters/instance_id"
    - $ref: "#/parameters/binding_id"
+  
   put:
     operationId: service_binding
     summary: Binds to a service
@@ -128,7 +129,38 @@ paths:
         $ref: "#/definitions/BindingResponse"
       "409":
        description: Should be returned if the requested binding already exists. The expected response body is {}, though the description field can be used to return a user-facing error message, as described in Broker Errors.
+       schema:
+        type: object
+        $ref: "#/definitions/Empty"
 
+  delete:
+    operationId: service_unbind
+    summary: Unbinds a service
+    description: When a broker receives an unbind request from Cloud Controller, it should delete any resources it created in bind. Usually this means that an application immediately cannot access the resource.
+    produces:
+      - application/json
+    tags:
+     - service_instance
+    parameters:
+     - name: service_id
+       in: query
+       type: string
+       description: ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.
+     - name: plan_id
+       in: query
+       type: string
+       description: ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.
+    responses:
+     "200":
+      description: Binding was deleted. The expected response body is {}.
+      schema:
+       type: object
+       $ref: "#/definitions/Empty"
+     "410":
+      description: Should be returned if the binding does not exist. The expected response body is {}.
+      schema:
+        type: object
+        $ref: "#/definitions/Empty"
 
 parameters:
   instance_id:
@@ -144,7 +176,6 @@ parameters:
     type: string
     in: path
     required: true
-
 
 definitions:
   Services:
@@ -307,14 +338,3 @@ definitions:
     syslog_drain_url:
      type: string
      description: A URL to which Cloud Foundry should drain logs for the bound application. requires syslog_drain must be declared in the catalog endpoint or Cloud Foundry will consider the response invalid. For details, [see Application Log Streaming](https://docs.cloudfoundry.org/services/app-log-streaming.html).
-
-
-
-
-
-
-
-
-
-
-
