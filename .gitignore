@@ -1,2 +1,5 @@
 .DS_Store
 out/
+generated_server
+generated_test
+generated**
