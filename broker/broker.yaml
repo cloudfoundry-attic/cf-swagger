@@ -95,11 +95,42 @@ paths:
       description: May be returned if the particular plan change requested is not supported or if the request can not currently be fulfilled due to the state of the instance (eg. instance utilization is over the quota of the requested plan). Broker should include a user-facing message in the body; for details [see Broker Errors](https://docs.cloudfoundry.org/services/api.html#broker-errors).
       schema:
         type: object
+
+  delete:
+   operationId: deprovision_service_instance
+   summary: Deprovisions a service instance.
+   description: When a broker receives a deprovision request from Cloud Controller, it should delete any resources it created during the provision. Usually this means that all resources are immediately reclaimed for future provisions.
+   produces:
+    - application/json
+   tags:
+    - service_instance
+   parameters:
+    - name: service_id
+      in: query
+      type: string
+      description: ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.
+    - name: plan_id
+      in: query
+      type: string
+      description: ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.
+   responses:
+    "200":
+     description: Service instance was deleted. The expected response body is {}.
+     schema:
+      type: object
+      $ref: "#/definitions/Empty"
+    "410":
+     description: Should be returned if the binding does not exist. The expected response body is {}.
+     schema:
+       type: object
+       $ref: "#/definitions/Empty"
+
+
  /service_instances/{instance_id}/service_bindings/{binding_id}:
   parameters:
    - $ref: "#/parameters/instance_id"
    - $ref: "#/parameters/binding_id"
-  
+
   put:
     operationId: service_binding
     summary: Binds to a service
