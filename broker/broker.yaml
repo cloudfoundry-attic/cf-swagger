@@ -45,6 +45,7 @@ paths:
    summary: Provisions a service instance
    parameters:
     - name: service
+      required: true
       description: Service information.
       in: body
       schema:
@@ -81,6 +82,7 @@ paths:
    parameters:
     - name: plan
       description: New Plan information.
+      required: true
       in: body
       schema:
        type: object
@@ -106,10 +108,12 @@ paths:
     - service_instance
    parameters:
     - name: service_id
+      required: true
       in: query
       type: string
       description: ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.
     - name: plan_id
+      required: true
       in: query
       type: string
       description: ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.
@@ -124,7 +128,6 @@ paths:
      schema:
        type: object
        $ref: "#/definitions/Empty"
-
 
  /service_instances/{instance_id}/service_bindings/{binding_id}:
   parameters:
@@ -143,6 +146,7 @@ paths:
      - service_instance
     parameters:
      - name: binding
+       required: true
        in: body
        schema:
         type: object
@@ -174,10 +178,12 @@ paths:
      - service_instance
     parameters:
      - name: service_id
+       required: true
        in: query
        type: string
        description: ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.
      - name: plan_id
+       required: true
        in: query
        type: string
        description: ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.
