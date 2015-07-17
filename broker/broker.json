@@ -60,6 +60,7 @@
                 "parameters": [
                     {
                         "name": "service",
+                        "required": true,
                         "description": "Service information.",
                         "in": "body",
                         "schema": {
@@ -109,6 +110,7 @@
                     {
                         "name": "plan",
                         "description": "New Plan information.",
+                        "required": true,
                         "in": "body",
                         "schema": {
                             "type": "object",
@@ -145,12 +147,14 @@
                 "parameters": [
                     {
                         "name": "service_id",
+                        "required": true,
                         "in": "query",
                         "type": "string",
                         "description": "ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID."
                     },
                     {
                         "name": "plan_id",
+                        "required": true,
                         "in": "query",
                         "type": "string",
                         "description": "ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID."
@@ -199,6 +203,7 @@
                 "parameters": [
                     {
                         "name": "binding",
+                        "required": true,
                         "in": "body",
                         "schema": {
                             "type": "object",
@@ -243,12 +248,14 @@
                 "parameters": [
                     {
                         "name": "service_id",
+                        "required": true,
                         "in": "query",
                         "type": "string",
                         "description": "ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID."
                     },
                     {
                         "name": "plan_id",
+                        "required": true,
                         "in": "query",
                         "type": "string",
                         "description": "ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID."
