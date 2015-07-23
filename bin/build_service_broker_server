@@ -7,12 +7,8 @@ export GOPATH=$(pwd)/../../../../
 #SWAGGER=$(which swagger)
 SWAGGER=../../../go-swagger/go-swagger/out/swagger
 
-echo "Swagger generating code"
-
-mkdir -p generated_server
-cd generated_server
-$SWAGGER generate server -f  ../cpi/bosh_cpi.json -A bosh_cpi
-cd -
-
 echo -e "\n Formatting packages..."
 go fmt ./...
+
+echo -e "\nGenerating Binary..."
+go build -o $(dirname $0)/../out/service-broker-server ./generated_service_broker_server/cmd/service-broker-server/main.go

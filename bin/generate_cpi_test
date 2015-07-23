@@ -14,13 +14,14 @@ echo "Swagger generating code"
 # $SWAGGER generate test -f  ../cpi/bosh_cpi.json -A bosh_cpi
 # cd -
 
-mkdir -p generated_broker_test
-cd generated_broker_test
-$SWAGGER generate test -f  ../broker/broker.json -A broker
+mkdir -p generated_cpi_test
+cd generated_cpi_test
+$SWAGGER generate test -f  ../cpi/bosh_cpi.json -A bosh_cpi
 cd -
 
 echo -e "\n Formatting packages..."
 go fmt ./...
 
-echo -e "\n Running ginkgo on generated tests"
-ginkgo -r generated_broker_test
+
+echo -e "\n Running ginkgo on generated cpi tests"
+ginkgo -r generated_cpi_test

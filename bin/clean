@@ -2,4 +2,7 @@
 set -e
 
 rm -rf out/* 
-rm -rf generated_server/*
+rm -rf generated_cpi_server/*
+rm -rf generated_service_broker_server/*
+rm -rf generated_cpi_test/*
+rm -rf generated_service_broker_test/*

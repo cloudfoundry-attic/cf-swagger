@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -e
+
+export GOPATH=$(pwd)/../../../../
+#export GOPATH=$(godep path):$GOPATH
+
+#SWAGGER=$(which swagger)
+SWAGGER=../../../go-swagger/go-swagger/out/swagger
+
+echo "Swagger generating code"
+
+mkdir -p generated_cpi_server
+cd generated_cpi_server
+$SWAGGER generate server -f  ../cpi/bosh_cpi.json -A bosh_cpi
+cd -
+
+
+mkdir -p generated_service_broker_server
+cd generated_service_broker_server
+$SWAGGER generate server -f  ../service_broker/service_broker.json -A service_broker
+cd -
+
+
+echo -e "\n Formatting packages..."
+go fmt ./...
