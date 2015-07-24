@@ -16,12 +16,8 @@ echo "Swagger generating code"
 
 mkdir -p generated_cpi_test
 cd generated_cpi_test
-$SWAGGER generate test -f  ../cpi/bosh_cpi.json -A bosh_cpi
+$SWAGGER generate test -f  ../descriptions/bosh/ecpi/bosh_cpi.json -A bosh_cpi
 cd -
 
 echo -e "\n Formatting packages..."
 go fmt ./...
-
-
-echo -e "\n Running ginkgo on generated cpi tests"
-ginkgo -r generated_cpi_test

@@ -11,7 +11,7 @@ echo "Swagger generating code"
 
 mkdir -p generated_service_broker_server
 cd generated_service_broker_server
-$SWAGGER generate server -f  ../service_broker/service_broker.json -A service_broker
+$SWAGGER generate server -f  ../descriptions/cloudfoundry/service_broker/service_broker.json -A service_broker
 cd -
 
 

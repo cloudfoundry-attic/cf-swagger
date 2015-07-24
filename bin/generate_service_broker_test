@@ -13,12 +13,9 @@ echo "Swagger generating code"
 
 mkdir -p generated_service_broker_test
 cd generated_service_broker_test
-$SWAGGER generate test -f  ../service_broker/service_broker.json -A service_broker
+$SWAGGER generate test -f  ../descriptions/cloudfoundry/service_broker/service_broker.json -A service_broker
 cd -
 
 
 echo -e "\n Formatting packages..."
 go fmt ./...
-
-echo -e "\n Running ginkgo on generated service broker tests"
-ginkgo -r generated_service_broker_test

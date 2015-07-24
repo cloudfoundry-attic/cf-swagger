@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+export GOPATH=$(pwd)/../../../../
+
+
+echo -e "\n Running ginkgo on generated service broker tests"
+ginkgo -r generated_service_broker_test
