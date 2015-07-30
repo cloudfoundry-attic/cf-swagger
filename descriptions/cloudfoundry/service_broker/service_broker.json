@@ -26,10 +26,8 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Services"
-                            }
+                            "type": "object",
+                            "$ref": "#/definitions/CatalogServices"
                         }
                     },
                     "400": {
@@ -74,18 +72,18 @@
                         "description": "May be returned if the service instance already exists and the requested parameters are identical to the existing service instance. The expected response body is below.",
                         "schema": {
                             "type": "object",
-                            "$ref": "#/definitions/Dashbord_url"
+                            "$ref": "#/definitions/Dashboard_url"
                         }
                     },
                     "201": {
                         "description": "Service instance has been created. The expected response body is below.",
                         "schema": {
                             "type": "object",
-                            "$ref": "#/definitions/Dashbord_url"
+                            "$ref": "#/definitions/Dashboard_url"
                         }
                     },
                     "409": {
-                        "description": "Should be returned if the requested service instance already exists. The expected response body is â€œ{}â€",
+                        "description": "Should be returned if the requested service instance already exists. The expected response body is Ã¢â‚¬Å“{}Ã¢â‚¬Â",
                         "schema": {
                             "type": "object",
                             "$ref": "#/definitions/Empty"
@@ -190,7 +188,7 @@
             "put": {
                 "operationId": "service_binding",
                 "summary": "Binds to a service",
-                "description": "When the broker receives a bind request from the Cloud Controller, it should return information which helps an application to utilize the provisioned resource. This information is generically referred to as credentials. Applications should be issued unique credentials whenever possible, so one applicationâ€™s access can be revoked without affecting other bound applications. For more information on credentials, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).",
+                "description": "When the broker receives a bind request from the Cloud Controller, it should return information which helps an application to utilize the provisioned resource. This information is generically referred to as credentials. Applications should be issued unique credentials whenever possible, so one applicationÃ¢â‚¬â„¢s access can be revoked without affecting other bound applications. For more information on credentials, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).",
                 "produces": [
                     "application/json"
                 ],
@@ -411,6 +409,17 @@
         }
     },
     "definitions": {
+        "CatalogServices": {
+            "description": "list of services",
+            "properties": {
+                "services": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Services"
+                    }
+                }
+            }
+        },
         "Services": {
             "description": "Schema of a service object",
             "properties": {
@@ -438,7 +447,8 @@
                     }
                 },
                 "metadata": {
-                    "type": "string",
+                    "type": "object",
+                    "$ref": "#/definitions/Meta_data",
                     "description": "A list of metadata for a service offering. For more information, see [Service Metadata](https://docs.cloudfoundry.org/services/catalog-metadata.html)."
                 },
                 "requires": {
@@ -462,7 +472,7 @@
                 "dashboard_client": {
                     "type": "object",
                     "description": "Contains the data necessary to activate the [Dashboard SSO feature](https://docs.cloudfoundry.org/services/dashboard-sso.html) for this service",
-                    "$ref": "#/definitions/Dashbordclient"
+                    "$ref": "#/definitions/Dashboard_client"
                 }
             }
         },
@@ -483,6 +493,7 @@
                 },
                 "metadata": {
                     "type": "object",
+                    "$ref": "#/definitions/PlanMetadata",
                     "description": "A list of metadata for a service plan. For more information, [see Service Metadata](https://docs.cloudfoundry.org/services/catalog-metadata.html)."
                 },
                 "free": {
@@ -491,7 +502,7 @@
                 }
             }
         },
-        "Dashbordclient": {
+        "Dashboard_client": {
             "description": "Contains the data necessary to activate the [Dashboard SSO feature](https://docs.cloudfoundry.org/services/dashboard-sso.html) for this service",
             "properties": {
                 "id": {
@@ -536,12 +547,12 @@
                 }
             }
         },
-        "Dashbord_url": {
-            "description": "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (â€œ9189kdfsk0vfnkuâ€ in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html).",
+        "Dashboard_url": {
+            "description": "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (Ã¢â‚¬Å“9189kdfsk0vfnkuÃ¢â‚¬Â in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html).",
             "properties": {
                 "dashboard_url": {
                     "type": "string",
-                    "description": "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (â€œ9189kdfsk0vfnkuâ€ in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
+                    "description": "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (Ã¢â‚¬Å“9189kdfsk0vfnkuÃ¢â‚¬Â in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
                 }
             }
         },
@@ -701,6 +712,40 @@
                 }
             }
         },
+        "PlanMetadata": {
+            "description": "Plan metdata",
+            "properties": {
+                "bullets": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "cost": {
+                    "description": "cost of the plan",
+                    "type": "integer"
+                }
+            }
+        },
+        "Meta_data": {
+            "description": "metadata related to the service",
+            "properties": {
+                "displayName": {
+                    "type": "string",
+                    "description": "displayName of the service."
+                },
+                "listing": {
+                    "type": "object",
+                    "description": "Listing.",
+                    "$ref": "#/definitions/Listing"
+                },
+                "provider": {
+                    "type": "object",
+                    "description": "Provider of the service.",
+                    "$ref": "#/definitions/Provider"
+                }
+            }
+        },
         "Entity": {
             "description": "Entity conatining the data of the service key",
             "properties": {
@@ -743,6 +788,32 @@
                     "items": {
                         "$ref": "#/definitions/ServiceKeyEntity"
                     }
+                }
+            }
+        },
+        "Listing": {
+            "description": "Listing.",
+            "properties": {
+                "blurb": {
+                    "description": "blurb",
+                    "type": "string"
+                },
+                "imageUrl": {
+                    "description": "image URL",
+                    "type": "string"
+                },
+                "longDescription": {
+                    "description": "Long Description.",
+                    "type": "string"
+                }
+            }
+        },
+        "Provider": {
+            "description": "provider",
+            "properties": {
+                "name": {
+                    "description": "Provider name",
+                    "type": "string"
                 }
             }
         }
