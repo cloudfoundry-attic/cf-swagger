@@ -1,0 +1,189 @@
+swagger: '2.0'
+info:
+  version: '2.5'
+  title: CloudFoundry Services API
+  description: >
+    The Cloud Foundry services API defines the contract between the Cloud
+    Controller and the service broker. The broker is expected to implement
+    several HTTP (or HTTPS) endpoints underneath a URI prefix. One or more
+    services can be provided by a single broker, and load balancing enables
+    horizontal scalability of redundant brokers. Multiple Cloud Foundry instances
+    can be supported by a single broker using different URL prefixes and
+    credentials. [Learn more about the Service Broker
+    API.](http://swagger.wordnik.com)
+host: localhost
+basePath: /v2
+schemes:
+  - http
+paths:
+
+  /service_keys:
+    post:
+      operationId: create_service_key
+      summary: Creates a service key
+      description: Creating a new Service Key means calling an HTTP POST operation on the new /service_keys endpoint using an already created service instance.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - service_keys
+      parameters:
+        - name: service_key
+          required: true
+          in: body
+          schema:
+            type: object
+            $ref: '#/definitions/ServiceKey'
+      responses:
+        '201':
+          description: Service  key is created.
+          schema:
+            type: object
+            $ref: '#/definitions/ServiceKeyEntity'
+        '410':
+          description: 'Should be returned if the service does not exist. The expected response body is {}.'
+          schema:
+            type: object
+            $ref: '#/definitions/Empty'
+    get:
+      operationId: list_service_keys
+      summary: Gets the list of service keys.
+      description: "As a developer or admin user, Service Keys can be retrieved by HTTP GET operation on the /service_keys endpoint without any parameter. But Space Manager and Auditor user can't retrieve the Service Keys which means 0 results will be returned."
+      tags:
+        - service_keys
+      responses:
+        '200':
+          description: ok
+          schema:
+            type: object
+            $ref: '#/definitions/Keys'
+  '/service_keys/{key_id}':
+    parameters:
+      - $ref: '#/parameters/key_id'
+    get:
+      operationId: retrieve_service_key
+      summary: Retrieves a service key.
+      description: "Retrieving a Service Key can be done through an HTTP GET operation on the /service_keys endpoint by using an service key GUID or on the /service_instances endpoint with the service instance's GUID and service key name."
+      produces:
+        - application/json
+      tags:
+        - service_keys
+      responses:
+        '200':
+          description: Description of the service key.
+          schema:
+            type: object
+            $ref: '#/definitions/ServiceKeyEntity'
+        '404':
+          description: The service key does not exist.
+          schema:
+            type: object
+            $ref: '#/definitions/Empty'
+    delete:
+      operationId: delete_service_key
+      summary: Deletes a service key
+      description: A Service Key can be deleted by using HTTP DELETE opeartion on /service_keys endpoint. Currently Space Manager and Auditor are not authorized to perform delete operation. Only Admin and Space Developer have this permission.
+      tags:
+        - service_keys
+      responses:
+        '204':
+          description: The delete operation succeeded.
+parameters:
+  key_id:
+    name: key_id
+    description: The ID of a service key.
+    type: string
+    in: path
+    required: true
+definitions:
+  Empty:
+    type: string
+    description: 'Expected empty response could be {}'
+
+  Parameter:
+    description: A key value parameters
+    properties:
+      name:
+        type: string
+        description: Name of the parameter
+      value:
+        type: object
+        description: value of the parameter
+
+  ServiceKey:
+    description: Parameters needed to identify the service for which we need to get the keys.
+    properties:
+      service_instance_guid:
+        type: string
+        description: The guid of the service instance for which to create service key
+      name:
+        type: string
+        description: the name of the service key.
+      parameters:
+        type: array
+        items:
+          $ref: '#/definitions/Parameter'
+        description: Arbitrary parameters to pass along to the service broker. Must be a JSON object.
+  ServiceKeyEntity:
+    description: Assuming the current user agent is properly authenticated and the service instance GUID is valid then the result can be a new Service Key.
+    properties:
+      metadata:
+        type: object
+        $ref: '#/definitions/Metadata'
+        description: Metadata related to the service key
+      entity:
+        type: object
+        $ref: '#/definitions/Entity'
+        description: Service Key entity
+      service_instance_url:
+        type: string
+        description: URL of the service instance.
+  Metadata:
+    description: metadata related to the service key
+    properties:
+      guid:
+        type: string
+        description: guid of the created service key.
+      url:
+        type: string
+        description: URL of the creatd service Key.
+      created_at:
+        type: string
+        description: Timestamp of the creation of the key.
+      updated_at:
+        type: string
+        description: Timestamp of the last update of the key.
+
+  Entity:
+    description: Entity conatining the data of the service key
+    properties:
+      name:
+        type: string
+        description: Name of the service key.
+      service_instance_guid:
+        type: string
+        description: guid of the service instance of the created key.
+      credentials:
+        type: object
+        description: Credentials.
+  Keys:
+    description: keys
+    properties:
+      total_results:
+        type: integer
+        description: number of total results
+      total_pages:
+        type: integer
+        description: number of total pages
+      prev_url:
+        type: string
+        description: url of the previous page.
+      next_url:
+        type: string
+        description: url of the next page.
+      resources:
+        description: List of service keys.
+        type: array
+        items:
+          $ref: '#/definitions/ServiceKeyEntity'
