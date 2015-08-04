@@ -5,7 +5,7 @@
         "title": "Service Broker API",
         "description": "The Cloud Foundry services API defines the contract between the Cloud Controller and the service broker. The broker is expected to implement several HTTP (or HTTPS) endpoints underneath a URI prefix. One or more services can be provided by a single broker, and load balancing enables horizontal scalability of redundant brokers. Multiple Cloud Foundry instances can be supported by a single broker using different URL prefixes and credentials. [Learn more about the Service Broker API.](http://swagger.wordnik.com)\n"
     },
-    "host": "localhost",
+    "host": "127.0.0.1:54140",
     "basePath": "/v2",
     "schemes": [
         "http"
@@ -27,9 +27,7 @@
                         "description": "successful operation",
                         "schema": {
                             "type": "object",
-                            "items": {
-                                "$ref": "#/definitions/CatalogServices"
-                            }
+                            "$ref": "#/definitions/CatalogServices"
                         }
                     },
                     "400": {
@@ -38,14 +36,14 @@
                 }
             }
         },
-        "/service_instance/{instance_id}": {
+        "/serviceInstances/{instance_id}": {
             "parameters": [
                 {
                     "$ref": "#/parameters/instance_id"
                 }
             ],
             "put": {
-                "operationId": "create_service_instance",
+                "operationId": "createServiceInstance",
                 "produces": [
                     "application/json"
                 ],
@@ -53,7 +51,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "service_instance"
+                    "service_instances"
                 ],
                 "description": "When the broker receives a provision request from Cloud Controller, it should synchronously take whatever action is necessary to create a new service resource for the developer. The result of provisioning varies by service type, although there are a few common actions that work for many services.",
                 "summary": "Provisions a service instance",
@@ -85,7 +83,7 @@
                         }
                     },
                     "409": {
-                        "description": "Should be returned if the requested service instance already exists. The expected response body is â€œ{}â€",
+                        "description": "Should be returned if the requested service instance already exists. The expected response body is ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ{}ÃƒÂ¢Ã¢â€šÂ¬Â",
                         "schema": {
                             "type": "object",
                             "$ref": "#/definitions/Empty"
@@ -94,7 +92,7 @@
                 }
             },
             "patch": {
-                "operationId": "update_service_instance",
+                "operationId": "updateServiceInstance",
                 "summary": "Updating a Service Instance",
                 "description": "Brokers that implement this endpoint can enable users to modify attributes of an existing service instance. The first attribute Cloud Foundry supports users modifying is the service plan. This effectively enables users to upgrade or downgrade their service instance to other plans. To see how users make these requests, [see Managing Services](https://docs.cloudfoundry.org/devguide/services/managing-services.html#update_service).",
                 "consumes": [
@@ -104,7 +102,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "service_instance"
+                    "serviceInstances"
                 ],
                 "parameters": [
                     {
@@ -135,14 +133,14 @@
                 }
             },
             "delete": {
-                "operationId": "deprovision_service_instance",
+                "operationId": "deprovisionServiceInstance",
                 "summary": "Deprovisions a service instance.",
                 "description": "When a broker receives a deprovision request from Cloud Controller, it should delete any resources it created during the provision. Usually this means that all resources are immediately reclaimed for future provisions.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "service_instance"
+                    "serviceInstances"
                 ],
                 "parameters": [
                     {
@@ -178,7 +176,7 @@
                 }
             }
         },
-        "/service_instances/{instance_id}/service_bindings/{binding_id}": {
+        "/serviceInstances/{instance_id}/serviceBindings/{binding_id}": {
             "parameters": [
                 {
                     "$ref": "#/parameters/instance_id"
@@ -188,9 +186,9 @@
                 }
             ],
             "put": {
-                "operationId": "service_binding",
+                "operationId": "serviceBind",
                 "summary": "Binds to a service",
-                "description": "When the broker receives a bind request from the Cloud Controller, it should return information which helps an application to utilize the provisioned resource. This information is generically referred to as credentials. Applications should be issued unique credentials whenever possible, so one applicationâ€™s access can be revoked without affecting other bound applications. For more information on credentials, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).",
+                "description": "When the broker receives a bind request from the Cloud Controller, it should return information which helps an application to utilize the provisioned resource. This information is generically referred to as credentials. Applications should be issued unique credentials whenever possible, so one applicationÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s access can be revoked without affecting other bound applications. For more information on credentials, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).",
                 "produces": [
                     "application/json"
                 ],
@@ -198,7 +196,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "service_instance"
+                    "serviceInstances"
                 ],
                 "parameters": [
                     {
@@ -236,14 +234,14 @@
                 }
             },
             "delete": {
-                "operationId": "service_unbind",
+                "operationId": "serviceUnbind",
                 "summary": "Unbinds a service",
                 "description": "When a broker receives an unbind request from Cloud Controller, it should delete any resources it created in bind. Usually this means that an application immediately cannot access the resource.",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "service_instance"
+                    "serviceInstances"
                 ],
                 "parameters": [
                     {
@@ -435,11 +433,11 @@
             }
         },
         "Dashboard_url": {
-            "description": "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (â€œ9189kdfsk0vfnkuâ€ in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html).",
+            "description": "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ9189kdfsk0vfnkuÃƒÂ¢Ã¢â€šÂ¬Â in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html).",
             "properties": {
                 "dashboard_url": {
                     "type": "string",
-                    "description": "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (â€œ9189kdfsk0vfnkuâ€ in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
+                    "description": "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ9189kdfsk0vfnkuÃƒÂ¢Ã¢â€šÂ¬Â in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
                 }
             }
         },
@@ -548,11 +546,39 @@
                 },
                 "listing": {
                     "type": "object",
-                    "description": "Listing."
+                    "description": "Listing.",
+                    "$ref": "#/definitions/Listing"
                 },
                 "provider": {
-                    "type": "string",
-                    "description": "Provider of the service."
+                    "type": "object",
+                    "description": "Provider of the service.",
+                    "$ref": "#/definitions/Provider"
+                }
+            }
+        },
+        "Listing": {
+            "description": "Listing.",
+            "properties": {
+                "blurb": {
+                    "description": "blurb",
+                    "type": "string"
+                },
+                "imageUrl": {
+                    "description": "image URL.",
+                    "type": "string"
+                },
+                "longDescription": {
+                    "description": "Long Description",
+                    "type": "string"
+                }
+            }
+        },
+        "Provider": {
+            "description": "Provider",
+            "properties": {
+                "name": {
+                    "description": "Provider Name",
+                    "type": "string"
                 }
             }
         }
