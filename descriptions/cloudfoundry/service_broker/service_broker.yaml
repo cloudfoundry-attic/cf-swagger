@@ -11,7 +11,7 @@ info:
     can be supported by a single broker using different URL prefixes and
     credentials. [Learn more about the Service Broker
     API.](http://swagger.wordnik.com)
-host: 127.0.0.1:54140
+host: '127.0.0.1:54140'
 basePath: /v2
 schemes:
   - http
@@ -33,7 +33,7 @@ paths:
             $ref: '#/definitions/CatalogServices'
         '400':
           description: Invalid status value
-  /serviceInstances/{instance_id}:
+  '/service_instances/{instance_id}':
     parameters:
       - $ref: '#/parameters/instance_id'
     put:
@@ -66,7 +66,7 @@ paths:
             type: object
             $ref: '#/definitions/Dashboard_url'
         '409':
-          description: "Should be returned if the requested service instance already exists. The expected response body is ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ{}ÃƒÂ¢Ã¢â€šÂ¬\x9D"
+          description: "Should be returned if the requested service instance already exists. The expected response body is {}"
           schema:
             type: object
             $ref: '#/definitions/Empty'
@@ -79,7 +79,7 @@ paths:
       produces:
         - application/json
       tags:
-        - serviceInstances
+        - service_instances
       parameters:
         - name: plan
           description: New Plan information.
@@ -105,7 +105,7 @@ paths:
       produces:
         - application/json
       tags:
-        - serviceInstances
+        - service_instances
       parameters:
         - name: service_id
           required: true
@@ -128,20 +128,20 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/Empty'
-  /serviceInstances/{instance_id}/serviceBindings/{binding_id}:
+  '/service_instances/{instance_id}/service_bindings/{binding_id}':
     parameters:
       - $ref: '#/parameters/instance_id'
       - $ref: '#/parameters/binding_id'
     put:
       operationId: serviceBind
       summary: Binds to a service
-      description: 'When the broker receives a bind request from the Cloud Controller, it should return information which helps an application to utilize the provisioned resource. This information is generically referred to as credentials. Applications should be issued unique credentials whenever possible, so one applicationÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s access can be revoked without affecting other bound applications. For more information on credentials, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).'
+      description: 'When the broker receives a bind request from the Cloud Controller, it should return information which helps an application to utilize the provisioned resource. This information is generically referred to as credentials. Applications should be issued unique credentials whenever possible, so one applicationÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s access can be revoked without affecting other bound applications. For more information on credentials, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).'
       produces:
         - application/json
       consumes:
         - application/json
       tags:
-        - serviceInstances
+        - service_instances
       parameters:
         - name: binding
           required: true
@@ -172,7 +172,7 @@ paths:
       produces:
         - application/json
       tags:
-        - serviceInstances
+        - service_instances
       parameters:
         - name: service_id
           required: true
@@ -311,16 +311,15 @@ definitions:
         type: string
         description: 'Similar to organization_guid, but for the space.'
       parameteres:
-        type: array
-        items:
-          $ref: '#/definitions/Parameter'
+        type: object
+        $ref: '#/definitions/Parameter'
         description: Cloud Foundry API clients can provide a JSON object of configuration parameters with their request and this value will be passed through to the service broker. Brokers are responsible for validation.
   Dashboard_url:
-    description: "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ9189kdfsk0vfnkuÃƒÂ¢Ã¢â€šÂ¬\x9D in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
+    description: "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“9189kdfsk0vfnkuÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ã‚\x9D in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
     properties:
       dashboard_url:
         type: string
-        description: "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ9189kdfsk0vfnkuÃƒÂ¢Ã¢â€šÂ¬\x9D in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
+        description: "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“9189kdfsk0vfnkuÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ã‚\x9D in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
   Empty:
     type: string
     description: 'Expected empty response could be {}'
@@ -331,9 +330,8 @@ definitions:
         type: string
         description: ID of the new plan from the catalog.
       parameters:
-        type: array
-        items:
-          $ref: '#/definitions/Parameter'
+        type: object
+        $ref: '#/definitions/Parameter'
         description: Cloud Foundry API clients can provide a JSON object of configuration parameters with their request and this value will be passed through to the service broker. Brokers are responsible for validation.
       previous_values:
         type: object
@@ -376,9 +374,8 @@ definitions:
         type: string
         description: 'ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.'
       parameters:
-        type: array
-        items:
-          $ref: '#/definitions/Parameter'
+        type: object
+        $ref: '#/definitions/Parameter'
         description: Cloud Foundry API clients can provide a JSON object of configuration parameters with their request and this value will be passed through to the service broker. Brokers are responsible for validation.
   BindingResponse:
     description: Success binding response.
@@ -398,28 +395,26 @@ definitions:
       listing:
         type: object
         description: Listing.
-        $ref: "#/definitions/Listing"
+        $ref: '#/definitions/Listing'
       provider:
         type: object
         description: Provider of the service.
-        $ref: "#/definitions/Provider"
-
+        $ref: '#/definitions/Provider'
   Listing:
-   description: Listing.
-   properties:
-    blurb:
-     description: blurb
-     type: string
-    imageUrl:
-     description: image URL.
-     type: string
-    longDescription:
-     description: Long Description
-     type: string
-
+    description: Listing.
+    properties:
+      blurb:
+        description: blurb
+        type: string
+      imageUrl:
+        description: image URL.
+        type: string
+      longDescription:
+        description: Long Description
+        type: string
   Provider:
-   description: Provider
-   properties:
-    name:
-     description: Provider Name
-     type: string
+    description: Provider
+    properties:
+      name:
+        description: Provider Name
+        type: string
