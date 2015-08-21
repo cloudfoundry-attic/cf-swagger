@@ -11,7 +11,7 @@ info:
     can be supported by a single broker using different URL prefixes and
     credentials. [Learn more about the Service Broker
     API.](http://swagger.wordnik.com)
-host: '127.0.0.1:54140'
+host: '127.0.0.1:8888'
 basePath: /v2
 schemes:
   - http

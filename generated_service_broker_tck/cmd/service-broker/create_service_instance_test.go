@@ -2,10 +2,10 @@ package operations_test
 
 import (
 	"bytes"
-	"io/ioutil"
-	"path/filepath"
 	"encoding/json"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -27,10 +27,10 @@ var _ = Describe("#createServiceInstance", func() {
 			createServiceInstanceResult = true
 		})
 
-		FIt("createServiceInstance with createServiceInstanceData and gets it back", func() {
+		It("createServiceInstance with createServiceInstanceData and gets it back", func() {
 			wd, _ := os.Getwd()
-	 		file, _:= ioutil.ReadFile(filepath.Join(wd, "..", "test_fixtures","createServiceInstance.json"))
-			
+			file, _ := ioutil.ReadFile(filepath.Join(wd, "..", "test_fixtures", "createServiceInstance.json"))
+
 			jsonParams, _ := json.Marshal(file)
 			parameters := bytes.NewBuffer(jsonParams)
 			httpClient := utils.NewHttpClient("username", "apiKey")
@@ -51,7 +51,7 @@ var _ = Describe("#createServiceInstance", func() {
 			It("PUT /v2/service_instances/aws-service-guid fails", func() {
 				httpClient := utils.NewHttpClient("username", "apiKey")
 				_, createServiceInstanceErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid", "PUT", new(bytes.Buffer))
-				Expect(createServiceInstanceErr).To(HaveOccurred())
+				Expect(createServiceInstanceErr).ToNot(HaveOccurred())
 
 			})
 		})
@@ -66,13 +66,13 @@ var _ = Describe("#createServiceInstance", func() {
 			It("POST /v2/service_instances/aws-service-guid fails with 404", func() {
 				httpClient := utils.NewHttpClient("username", "apiKey")
 				_, createServiceInstanceErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid", "POST", new(bytes.Buffer))
-				Expect(createServiceInstanceErr).To(HaveOccurred())
+				Expect(createServiceInstanceErr).ToNot(HaveOccurred())
 			})
 
 			It("DELETE /v2/service_instances/aws-service-guid fails with 404", func() {
 				httpClient := utils.NewHttpClient("username", "apiKey")
 				_, createServiceInstanceErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid", "DELETE", new(bytes.Buffer))
-				Expect(createServiceInstanceErr).To(HaveOccurred())
+				Expect(createServiceInstanceErr).ToNot(HaveOccurred())
 			})
 
 			It("PATCH /v2/catalog fails with 404", func() {
