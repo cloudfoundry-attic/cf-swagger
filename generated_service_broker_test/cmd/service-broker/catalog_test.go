@@ -25,7 +25,7 @@ var _ = Describe("#catalog", func() {
 		})
 
 		It("GET /v2/catalog returns catalogData", func() {
-
+			
 			httpClient := utils.NewHttpClient("username", "apiKey")
 			response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "GET", new(bytes.Buffer))
 			if response == nil {

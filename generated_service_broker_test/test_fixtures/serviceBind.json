@@ -1,7 +1,4 @@
 {
-  "plan_id": "micro",
-  "service_id": "aws-service-guid",
-  "parameters": {
-    "name": "string",
-    "value": {"test"}
+  "service_plan_id": "micro",
+  "service_id": "aws-service-guid"
 }

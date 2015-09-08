@@ -1,8 +1,8 @@
 package utils
 
 import (
+	"fmt"
 	"bytes"
-	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -13,16 +13,17 @@ func ReadTestFixtures(fileName string) (*bytes.Buffer, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Printf("=====>wd%#v",wd)
 	file, err := ioutil.ReadFile(filepath.Join(wd, "../..", "test_fixtures", fileName))
+	
 	if err != nil {
 		return nil, err
 	}
 
-	jsonParams, err := json.Marshal(file)
-	if err != nil {
-		return nil, err
-	}
 
-	return bytes.NewBuffer(jsonParams), nil
+
+	fmt.Println("sending back file content")
+	return bytes.NewBuffer(file), nil
 }
+
+

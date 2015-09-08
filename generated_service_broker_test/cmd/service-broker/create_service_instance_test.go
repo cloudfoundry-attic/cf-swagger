@@ -32,7 +32,6 @@ var _ = Describe("#createServiceInstance", func() {
 			_, createServiceInstanceErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid", "PUT", parameters)
 			Expect(createServiceInstanceErr).ToNot(HaveOccurred())
 			Expect(createServiceInstanceResult).To(BeTrue())
-			Expect(createServiceInstanceData).To(Equal("createServiceInstance data"))
 		})
 	})
 

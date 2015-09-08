@@ -4,5 +4,5 @@
   "organization_guid": "org-service-guid",
   "space_guid": "space-service-guid",
   "parameters": 
-    {"ami_id":"ami-ecb68a84"}
+    {"ami_id":"ami-df6a8b9b"}
 }

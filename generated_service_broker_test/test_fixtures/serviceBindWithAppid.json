@@ -1,8 +1,5 @@
 {
-  "plan_id": "micro",
+  "service_plan_id": "micro",
   "service_id": "aws-service-guid",
-  "app_id":"appId",
-  "parameters": {
-    "name": "string",
-    "value": {"test"}
+  "app_id":"appId"
 }

@@ -2,6 +2,7 @@ package operations_test
 
 import (
 	"bytes"
+	"fmt"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -25,23 +26,27 @@ var _ = Describe("#serviceBind", func() {
 			serviceBindResult = true
 		})
 
-		It("serviceBind with serviceBindData without app_id", func() {
+		FIt("serviceBind with serviceBindData without app_id", func() {
 			parameters, err := ReadTestFixtures("serviceBind.json")
 			Expect(err).ToNot(HaveOccurred())
+			fmt.Printf("parameters%#v",parameters.String())
 			httpClient := utils.NewHttpClient("username", "apiKey")
 			response, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "PUT", parameters)
-			Expect(response).To(Equal(nil))
+			Expect(response).ToNot(Equal(nil))
+			Expect(string(response)).ToNot(ContainSubstring("Unprocessable Entity"))
 			Expect(serviceBindErr).ToNot(HaveOccurred())
 			Expect(serviceBindResult).To(BeTrue())
 
 		})
 
-		It("serviceBind with serviceBindData with app_id", func() {
+		FIt("serviceBind with serviceBindData with app_id", func() {
 			parameters, err := ReadTestFixtures("serviceBindWithAppid.json")
 			Expect(err).ToNot(HaveOccurred())
+			fmt.Printf("parameters%#v",parameters.String())
 			httpClient := utils.NewHttpClient("username", "apiKey")
 			response, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "PUT", parameters)
 			Expect(response).ToNot(Equal(nil))
+			Expect(string(response)).ToNot(ContainSubstring("Unprocessable Entity"))
 			Expect(serviceBindErr).ToNot(HaveOccurred())
 			Expect(serviceBindResult).To(BeTrue())
 
