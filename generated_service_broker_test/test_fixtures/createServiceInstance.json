@@ -1,0 +1,8 @@
+{
+  "service_id": "aws-service-guid",
+  "plan_id": "small-plan-guid",
+  "organization_guid": "org-service-guid",
+  "space_guid": "space-service-guid",
+  "parameters": 
+    {"ami_id":"ami-ecb68a84"}
+}
