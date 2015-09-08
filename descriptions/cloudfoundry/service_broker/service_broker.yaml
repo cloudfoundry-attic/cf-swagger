@@ -61,12 +61,12 @@ paths:
             type: object
             $ref: '#/definitions/Dashboard_url'
         '201':
-          description: Service instance has been created. The expected response body is below.
+          description: Service instance has been created.
           schema:
             type: object
             $ref: '#/definitions/Dashboard_url'
         '409':
-          description: "Should be returned if the requested service instance already exists. The expected response body is {}"
+          description: 'Should be returned if the requested service instance already exists. The expected response body is {}'
           schema:
             type: object
             $ref: '#/definitions/Empty'
@@ -107,16 +107,13 @@ paths:
       tags:
         - service_instances
       parameters:
-        - name: service_id
+        - name: deprovisionParameters
           required: true
-          in: query
-          type: string
-          description: 'ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.'
-        - name: plan_id
-          required: true
-          in: query
-          type: string
-          description: 'ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.'
+          in: body
+          description: Parameters to identify the service to be deprovisioned
+          schema:
+           type: object
+           $ref: '#/definitions/UnbindParameters'
       responses:
         '200':
           description: 'Service instance was deleted. The expected response body is {}.'
@@ -134,8 +131,9 @@ paths:
       - $ref: '#/parameters/binding_id'
     put:
       operationId: serviceBind
+      x-version: 2.6
       summary: Binds to a service
-      description: 'When the broker receives a bind request from the Cloud Controller, it should return information which helps an application to utilize the provisioned resource. This information is generically referred to as credentials. Applications should be issued unique credentials whenever possible, so one applicationÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢s access can be revoked without affecting other bound applications. For more information on credentials, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).'
+      description: 'When the broker receives a bind request from the Cloud Controller, it should return information which helps an application to utilize the provisioned resource. This information is generically referred to as credentials. Applications should be issued unique credentials whenever possible, so one application access can be revoked without affecting other bound applications. For more information on credentials, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).'
       produces:
         - application/json
       consumes:
@@ -174,16 +172,12 @@ paths:
       tags:
         - service_instances
       parameters:
-        - name: service_id
+        - name: UnbindParameters
+          in: body
           required: true
-          in: query
-          type: string
-          description: 'ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.'
-        - name: plan_id
-          required: true
-          in: query
-          type: string
-          description: 'ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.'
+          schema:
+           type: object
+           $ref: '#/definitions/UnbindParameters'
       responses:
         '200':
           description: 'Binding was deleted. The expected response body is {}.'
@@ -315,11 +309,11 @@ definitions:
         $ref: '#/definitions/Parameter'
         description: Cloud Foundry API clients can provide a JSON object of configuration parameters with their request and this value will be passed through to the service broker. Brokers are responsible for validation.
   Dashboard_url:
-    description: "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“9189kdfsk0vfnkuÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ã‚\x9D in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
+    description: "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed ( in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
     properties:
       dashboard_url:
         type: string
-        description: "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“9189kdfsk0vfnkuÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ã‚\x9D in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
+        description: "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
   Empty:
     type: string
     description: 'Expected empty response could be {}'
@@ -418,3 +412,12 @@ definitions:
       name:
         description: Provider Name
         type: string
+  UnbindParameters:
+   description: Parameters needed to unbind a service instance
+   properties:
+    service_id:
+     type: string
+     description: 'ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.'
+    plan_id:
+     type: string
+     description: 'ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.'
