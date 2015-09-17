@@ -2,92 +2,118 @@ package operations_test
 
 import (
 	"bytes"
-	"fmt"
+	"strings"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.com/maximilien/swagger-cf/generated_service_broker_test/cmd/utils"
-
-	utils "github.com/maximilien/swagger-cf/utils"
+	utils "github.com/maximilien/cf-swagger/utils"
 )
 
 var _ = Describe("#serviceBind", func() {
 	var (
-		serviceBindData   string
 		serviceBindResult bool
 		serviceBindErr    error
 	)
 
 	Context("when serviceBind succeed", func() {
 		BeforeEach(func() {
-			serviceBindData = "serviceBind data"
 			serviceBindErr = nil
 			serviceBindResult = true
 		})
 
-		FIt("serviceBind with serviceBindData without app_id", func() {
-			parameters, err := ReadTestFixtures("serviceBind.json")
+		FIt("serviceBind v2/service_instances/aws-service-guid/service_bindings/aws-service-binding returns models.BindingResponse", func() {
+
+			parameters, err := utils.ReadTestFixtures("serviceBind.json")
 			Expect(err).ToNot(HaveOccurred())
-			fmt.Printf("parameters%#v",parameters.String())
+
+			httpClient := utils.NewHttpClient("username", "apiKey")
+			response, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "PUT", parameters)
+			if strings.Contains(string(response), "404") {
+				serviceBindResult = false
+			}
+			Expect(serviceBindErr).ToNot(HaveOccurred())
+			Expect(string(response)).ToNot(ContainSubstring("Unprocessable Entity"))
+			Expect(serviceBindResult).To(BeTrue())
+		})
+
+		FIt("serviceBind v2/service_instances/aws-service-guid/service_bindings/aws-service-binding with app_id", func() {
+			parameters, err := utils.ReadTestFixtures("serviceBindWithAppid.json")
+			Expect(err).ToNot(HaveOccurred())
 			httpClient := utils.NewHttpClient("username", "apiKey")
 			response, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "PUT", parameters)
 			Expect(response).ToNot(Equal(nil))
 			Expect(string(response)).ToNot(ContainSubstring("Unprocessable Entity"))
 			Expect(serviceBindErr).ToNot(HaveOccurred())
-			Expect(serviceBindResult).To(BeTrue())
-
 		})
 
-		FIt("serviceBind with serviceBindData with app_id", func() {
-			parameters, err := ReadTestFixtures("serviceBindWithAppid.json")
-			Expect(err).ToNot(HaveOccurred())
-			fmt.Printf("parameters%#v",parameters.String())
-			httpClient := utils.NewHttpClient("username", "apiKey")
-			response, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "PUT", parameters)
-			Expect(response).ToNot(Equal(nil))
-			Expect(string(response)).ToNot(ContainSubstring("Unprocessable Entity"))
-			Expect(serviceBindErr).ToNot(HaveOccurred())
-			Expect(serviceBindResult).To(BeTrue())
-
-		})
 	})
 
 	Context("when serviceBind fail", func() {
 		BeforeEach(func() {
 			serviceBindErr = nil
 			serviceBindResult = false
-
 		})
 
-		Context("when parameters are incorrect", func() {
-			It("PUT v2/service_instances/aws-service-guid/service_bindings/aws-service-binding fails", func() {
-
+		Context("when parameters are empty", func() {
+			It("PUT v2/service_instances/aws-service-guid/service_bindings/aws-service-binding with empty parameters", func() {
 				httpClient := utils.NewHttpClient("username", "apiKey")
-				_, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "GET", new(bytes.Buffer))
-				Expect(serviceBindErr).ToNot(HaveOccurred())
+				response, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "PUT", new(bytes.Buffer))
+				if strings.Contains(string(response), "404") {
+					serviceBindResult = false
+				}
 
+				Expect(serviceBindErr).ToNot(HaveOccurred())
+				Expect(serviceBindResult).ToNot(BeTrue())
 			})
 		})
 
 		Context("when HTTP method is incorrect", func() {
-			It("GET v2/service_instances/aws-service-guid/service_bindings/aws-service-binding fails with 404", func() {
+
+			It("Post  v2/service_instances/aws-service-guid/service_bindings/aws-service-binding fails with 404", func() {
 				httpClient := utils.NewHttpClient("username", "apiKey")
-				_, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "GET", new(bytes.Buffer))
+				response, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "Post", new(bytes.Buffer))
+				if strings.Contains(string(response), "404") {
+					serviceBindResult = false
+				}
+
 				Expect(serviceBindErr).ToNot(HaveOccurred())
+				Expect(serviceBindResult).ToNot(BeTrue())
 			})
 
-			It("POST v2/service_instances/aws-service-guid/service_bindings/aws-service-binding fails with 404", func() {
+			It("Patch  v2/service_instances/aws-service-guid/service_bindings/aws-service-binding fails with 404", func() {
 				httpClient := utils.NewHttpClient("username", "apiKey")
-				_, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "POST", new(bytes.Buffer))
+				response, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "Patch", new(bytes.Buffer))
+				if strings.Contains(string(response), "404") {
+					serviceBindResult = false
+				}
+
 				Expect(serviceBindErr).ToNot(HaveOccurred())
+				Expect(serviceBindResult).ToNot(BeTrue())
 			})
 
-			It("PATCH v2/service_instances/aws-service-guid/service_bindings/aws-service-binding fails with 404", func() {
+			It("Options  v2/service_instances/aws-service-guid/service_bindings/aws-service-binding fails with 404", func() {
 				httpClient := utils.NewHttpClient("username", "apiKey")
-				_, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "PATCH", new(bytes.Buffer))
+				response, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "Options", new(bytes.Buffer))
+				if strings.Contains(string(response), "404") {
+					serviceBindResult = false
+				}
+
 				Expect(serviceBindErr).ToNot(HaveOccurred())
+				Expect(serviceBindResult).ToNot(BeTrue())
 			})
+
+			It("Head  v2/service_instances/aws-service-guid/service_bindings/aws-service-binding fails with 404", func() {
+				httpClient := utils.NewHttpClient("username", "apiKey")
+				response, serviceBindErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid/service_bindings/aws-service-binding", "Head", new(bytes.Buffer))
+				if strings.Contains(string(response), "404") {
+					serviceBindResult = false
+				}
+
+				Expect(serviceBindErr).ToNot(HaveOccurred())
+				Expect(serviceBindResult).ToNot(BeTrue())
+			})
+
 		})
 	})
 })

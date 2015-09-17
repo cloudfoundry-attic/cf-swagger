@@ -10,10 +10,9 @@ SWAGGER=../../../go-swagger/go-swagger/out/swagger
 echo "Swagger generating code"
 
 
-
 mkdir -p generated_service_broker_test
 cd generated_service_broker_test
-$SWAGGER generate test -f  ../descriptions/cloudfoundry/service_broker/service_broker.json -A service_broker
+$SWAGGER generate test -f  ../descriptions/cloudfoundry/service_broker/service_broker.json -A service_broker --with-tck
 cd -
 
 

@@ -10,7 +10,7 @@ info:
     horizontal scalability of redundant brokers. Multiple Cloud Foundry instances
     can be supported by a single broker using different URL prefixes and
     credentials. [Learn more about the Service Broker
-    API.](http://swagger.wordnik.com)
+    API.](http://docs.cloudfoundry.org/services/api.html)
 host: '127.0.0.1:8888'
 basePath: /v2
 schemes:
@@ -131,7 +131,7 @@ paths:
       - $ref: '#/parameters/binding_id'
     put:
       operationId: serviceBind
-      x-version: 2.6
+      x-version: "2.6"
       summary: Binds to a service
       description: 'When the broker receives a bind request from the Cloud Controller, it should return information which helps an application to utilize the provisioned resource. This information is generically referred to as credentials. Applications should be issued unique credentials whenever possible, so one application access can be revoked without affecting other bound applications. For more information on credentials, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).'
       produces:

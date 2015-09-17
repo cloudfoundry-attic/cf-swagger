@@ -1,45 +1,42 @@
 package operations_test
 
 import (
-	"fmt"
-
+	"bytes"
+	"strings"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.com/maximilien/swagger-cf/generated_service_broker_test/cmd/utils"
-
-	utils "github.com/maximilien/swagger-cf/utils"
+	utils "github.com/maximilien/cf-swagger/utils"
 )
 
 var _ = Describe("#deprovisionServiceInstance", func() {
 	var (
-		deprovisionServiceInstanceData   string
 		deprovisionServiceInstanceResult bool
 		deprovisionServiceInstanceErr    error
 	)
 
 	Context("when deprovisionServiceInstance succeed", func() {
 		BeforeEach(func() {
-			err := createServiceInstance()
-			Expect(err).ToNot(HaveOccurred())
-
-			deprovisionServiceInstanceData = "deprovisionServiceInstance data"
 			deprovisionServiceInstanceErr = nil
 			deprovisionServiceInstanceResult = true
 		})
 
-		It("deprovisionServiceInstance with deprovisionServiceInstanceData and gets it back", func() {
-			parameters, err := ReadTestFixtures("deprovisionServiceInstance.json")
+		It("deprovisionServiceInstance v2/service_instances/aws-service-guid returns models.Empty", func() {
+
+			parameters, err := utils.ReadTestFixtures("deprovisionServiceInstance.json")
 			Expect(err).ToNot(HaveOccurred())
-			fmt.Printf("======> parameters %#v\n", parameters.String())
+
 			httpClient := utils.NewHttpClient("username", "apiKey")
 			response, deprovisionServiceInstanceErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid", "DELETE", parameters)
-			fmt.Printf("======> response %#v\n", response)
+			if strings.Contains(string(response), "404") {
+				deprovisionServiceInstanceResult = false
+			}
 			Expect(deprovisionServiceInstanceErr).ToNot(HaveOccurred())
+			Expect(string(response)).ToNot(ContainSubstring("Unprocessable Entity"))
 			Expect(deprovisionServiceInstanceResult).To(BeTrue())
-			Expect(deprovisionServiceInstanceData).To(Equal("deprovisionServiceInstance data"))
 		})
+
 	})
 
 	Context("when deprovisionServiceInstance fail", func() {
@@ -48,18 +45,54 @@ var _ = Describe("#deprovisionServiceInstance", func() {
 			deprovisionServiceInstanceResult = false
 		})
 
-		It("fails to execute deprovisionServiceInstance with deprovisionServiceInstanceData", func() {
-			//Do deprovisionServiceInstance
-			Expect(deprovisionServiceInstanceErr).ToNot(HaveOccurred())
-			Expect(deprovisionServiceInstanceResult).To(BeFalse())
+		Context("when parameters are empty", func() {
+			It("DELETE v2/service_instances/aws-service-guid with empty parameters", func() {
+				httpClient := utils.NewHttpClient("username", "apiKey")
+				response, deprovisionServiceInstanceErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid", "DELETE", new(bytes.Buffer))
+				if strings.Contains(string(response), "404") {
+					deprovisionServiceInstanceResult = false
+				}
+
+				Expect(deprovisionServiceInstanceErr).ToNot(HaveOccurred())
+				Expect(deprovisionServiceInstanceResult).ToNot(BeTrue())
+			})
+		})
+
+		Context("when HTTP method is incorrect", func() {
+
+			It("Post  v2/service_instances/aws-service-guid fails with 404", func() {
+				httpClient := utils.NewHttpClient("username", "apiKey")
+				response, deprovisionServiceInstanceErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid", "Post", new(bytes.Buffer))
+				if strings.Contains(string(response), "404") {
+					deprovisionServiceInstanceResult = false
+				}
+
+				Expect(deprovisionServiceInstanceErr).ToNot(HaveOccurred())
+				Expect(deprovisionServiceInstanceResult).ToNot(BeTrue())
+			})
+
+			It("Options  v2/service_instances/aws-service-guid fails with 404", func() {
+				httpClient := utils.NewHttpClient("username", "apiKey")
+				response, deprovisionServiceInstanceErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid", "Options", new(bytes.Buffer))
+				if strings.Contains(string(response), "404") {
+					deprovisionServiceInstanceResult = false
+				}
+
+				Expect(deprovisionServiceInstanceErr).ToNot(HaveOccurred())
+				Expect(deprovisionServiceInstanceResult).ToNot(BeTrue())
+			})
+
+			It("Head  v2/service_instances/aws-service-guid fails with 404", func() {
+				httpClient := utils.NewHttpClient("username", "apiKey")
+				response, deprovisionServiceInstanceErr := httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid", "Head", new(bytes.Buffer))
+				if strings.Contains(string(response), "404") {
+					deprovisionServiceInstanceResult = false
+				}
+
+				Expect(deprovisionServiceInstanceErr).ToNot(HaveOccurred())
+				Expect(deprovisionServiceInstanceResult).ToNot(BeTrue())
+			})
+
 		})
 	})
 })
-
-func createServiceInstance() error {
-	parameters, err := ReadTestFixtures("createServiceInstance.json")
-	Expect(err).ToNot(HaveOccurred())
-	httpClient := utils.NewHttpClient("username", "apiKey")
-	_, err = httpClient.DoRawHttpRequest("v2/service_instances/aws-service-guid", "PUT", parameters)
-	return err
-}

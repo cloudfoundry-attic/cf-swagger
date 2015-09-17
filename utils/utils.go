@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"fmt"
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -13,17 +13,12 @@ func ReadTestFixtures(fileName string) (*bytes.Buffer, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("=====>wd%#v",wd)
 	file, err := ioutil.ReadFile(filepath.Join(wd, "../..", "test_fixtures", fileName))
-	
+
 	if err != nil {
 		return nil, err
 	}
 
-
-
 	fmt.Println("sending back file content")
 	return bytes.NewBuffer(file), nil
 }
-
-

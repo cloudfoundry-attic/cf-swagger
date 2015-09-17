@@ -7,35 +7,33 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.com/maximilien/swagger-cf/utils"
+	"github.com/maximilien/cf-swagger/utils"
 )
 
 var _ = Describe("#catalog", func() {
 	var (
-		catalogData   string
 		catalogResult bool
 		catalogErr    error
 	)
 
 	Context("when catalog succeed", func() {
 		BeforeEach(func() {
-			catalogData = "catalog data"
 			catalogErr = nil
 			catalogResult = true
 		})
 
-		It("GET /v2/catalog returns catalogData", func() {
-			
+		It("catalog v2/catalog returns models.CatalogServices", func() {
+
 			httpClient := utils.NewHttpClient("username", "apiKey")
 			response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "GET", new(bytes.Buffer))
-			if response == nil {
+			if strings.Contains(string(response), "404") {
 				catalogResult = false
 			}
-
 			Expect(catalogErr).ToNot(HaveOccurred())
+			Expect(string(response)).ToNot(ContainSubstring("Unprocessable Entity"))
 			Expect(catalogResult).To(BeTrue())
-			Expect(catalogData).To(Equal("catalog data"))
 		})
+
 	})
 
 	Context("when catalog fail", func() {
@@ -44,24 +42,11 @@ var _ = Describe("#catalog", func() {
 			catalogResult = false
 		})
 
-		Context("when parameters are incorrect", func() {
-			It("GET /v2/catalog/#someId returns catalogData", func() {
-				httpClient := utils.NewHttpClient("username", "apiKey")
-				response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog/id", "GET", new(bytes.Buffer))
-				if strings.Contains(string(response), "404") {
-					catalogResult = false
-				}
-
-				Expect(catalogErr).ToNot(HaveOccurred())
-				Expect(catalogResult).ToNot(BeTrue())
-				Expect(catalogData).To(Equal("catalog data"))
-			})
-		})
-
 		Context("when HTTP method is incorrect", func() {
-			It("PUT /v2/catalog fails with 404", func() {
+
+			It("Post  v2/catalog fails with 404", func() {
 				httpClient := utils.NewHttpClient("username", "apiKey")
-				response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "PUT", new(bytes.Buffer))
+				response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "Post", new(bytes.Buffer))
 				if strings.Contains(string(response), "404") {
 					catalogResult = false
 				}
@@ -70,9 +55,9 @@ var _ = Describe("#catalog", func() {
 				Expect(catalogResult).ToNot(BeTrue())
 			})
 
-			It("POST /v2/catalog fails with 404", func() {
+			It("Put  v2/catalog fails with 404", func() {
 				httpClient := utils.NewHttpClient("username", "apiKey")
-				response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "PUT", new(bytes.Buffer))
+				response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "Put", new(bytes.Buffer))
 				if strings.Contains(string(response), "404") {
 					catalogResult = false
 				}
@@ -81,9 +66,9 @@ var _ = Describe("#catalog", func() {
 				Expect(catalogResult).ToNot(BeTrue())
 			})
 
-			It("DELETE /v2/catalog fails with 404", func() {
+			It("Patch  v2/catalog fails with 404", func() {
 				httpClient := utils.NewHttpClient("username", "apiKey")
-				response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "PUT", new(bytes.Buffer))
+				response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "Patch", new(bytes.Buffer))
 				if strings.Contains(string(response), "404") {
 					catalogResult = false
 				}
@@ -92,9 +77,9 @@ var _ = Describe("#catalog", func() {
 				Expect(catalogResult).ToNot(BeTrue())
 			})
 
-			It("PATCH /v2/catalog fails with 404", func() {
+			It("Options  v2/catalog fails with 404", func() {
 				httpClient := utils.NewHttpClient("username", "apiKey")
-				response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "PUT", new(bytes.Buffer))
+				response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "Options", new(bytes.Buffer))
 				if strings.Contains(string(response), "404") {
 					catalogResult = false
 				}
@@ -102,6 +87,29 @@ var _ = Describe("#catalog", func() {
 				Expect(catalogErr).ToNot(HaveOccurred())
 				Expect(catalogResult).ToNot(BeTrue())
 			})
+
+			It("Head  v2/catalog fails with 404", func() {
+				httpClient := utils.NewHttpClient("username", "apiKey")
+				response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "Head", new(bytes.Buffer))
+				if strings.Contains(string(response), "404") {
+					catalogResult = false
+				}
+
+				Expect(catalogErr).ToNot(HaveOccurred())
+				Expect(catalogResult).ToNot(BeTrue())
+			})
+
+			It("Delete  v2/catalog fails with 404", func() {
+				httpClient := utils.NewHttpClient("username", "apiKey")
+				response, catalogErr := httpClient.DoRawHttpRequest("v2/catalog", "Delete", new(bytes.Buffer))
+				if strings.Contains(string(response), "404") {
+					catalogResult = false
+				}
+
+				Expect(catalogErr).ToNot(HaveOccurred())
+				Expect(catalogResult).ToNot(BeTrue())
+			})
+
 		})
 	})
 })

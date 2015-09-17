@@ -50,12 +50,12 @@ func (tck *tckReporter) SpecWillRun(specSummary *types.SpecSummary) {
 func (tck *tckReporter) SpecDidComplete(specSummary *types.SpecSummary) {
 
 	if specSummary.HasFailureState() {
-		if strings.EqualFold(specSummary.ComponentTexts[1], "#serviceBind") && strings.EqualFold(specSummary.ComponentTexts[2], "when serviceBind succeed") && strings.EqualFold(specSummary.ComponentTexts[3], "serviceBind with serviceBindData without app_id") {
+		if strings.EqualFold(specSummary.ComponentTexts[1], "#serviceBind") && strings.EqualFold(specSummary.ComponentTexts[2], "when serviceBind succeed") && strings.EqualFold(specSummary.ComponentTexts[3], "serviceBind v2/service_instances/aws-service-guid/service_bindings/aws-service-binding returns models.BindingResponse") {
 			tck.failsWithoutAppId = true
 			tck.failMessages = append(tck.failMessages, specSummary.ComponentTexts[1]+" "+specSummary.ComponentTexts[2]+" "+specSummary.ComponentTexts[3])
 		}
 	} else {
-		if strings.EqualFold(specSummary.ComponentTexts[1], "#serviceBind") && strings.EqualFold(specSummary.ComponentTexts[2], "when serviceBind succeed") && strings.EqualFold(specSummary.ComponentTexts[3], "serviceBind with serviceBindData with app_id") {
+		if strings.EqualFold(specSummary.ComponentTexts[1], "#serviceBind") && strings.EqualFold(specSummary.ComponentTexts[2], "when serviceBind succeed") && strings.EqualFold(specSummary.ComponentTexts[3], "serviceBind v2/service_instances/aws-service-guid/service_bindings/aws-service-binding with app_id") {
 			tck.succeedsWithAppId = true
 		}
 	}
@@ -92,11 +92,11 @@ func (tck *tckReporter) SpecSuiteDidEnd(summary *types.SuiteSummary) {
 	if tck.succeedsWithAppId && tck.failsWithoutAppId {
 		tck.totalTestCount -= 1
 	}
-	if (tck.failMessages!=nil){
-	fmt.Println("Cause(s) of the failure")
-	for _, v := range tck.failMessages {
-		fmt.Println(v)
-	}
+	if tck.failMessages != nil {
+		fmt.Println("Cause(s) of the failure")
+		for _, v := range tck.failMessages {
+			fmt.Println(v)
+		}
 	}
 	fmt.Println()
 	fmt.Printf("Tck Compliance v2.5: %3.2f % \n", tck.TckCompliance()*100)
