@@ -18,7 +18,7 @@ Two additional ways, besides Gitter or Slack chat above, to contact us:
 ### Overview Presentations, Talks, Blogs
 ----------------------------------------
 
-* Overview presentation on September 16th, 2015. Slides ([PDF](https://github.com/maximilien/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pdf) and [PPTX](https://github.com/maximilien/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pptx)), [video](https://www.youtube.com/watch?v=S_NdzSj1syg)
+* Overview presentation on September 16th, 2015. Slides ([PDF](https://github.com/maximilien/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pdf) and [PPTX](https://github.com/maximilien/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pptx)), [video](https://www.youtube.com/watch?v=N4DshPSn660)
 
 
 ### Getting Started
