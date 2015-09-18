@@ -24,7 +24,10 @@ Two additional ways, besides Gitter or Slack chat above, to contact us:
 ### Getting Started
 -------------------
 
-Assuming you have a valid [Golang 1.4.2](https://golang.org/dl/) or [later](https://golang.org/dl/) installed for your system, you can quickly get the version that we are using for go-swagger. This version is on [Github](https://github.com/midoblgsm/go-swagger). This is an extension of [go-swagger](https://github.com/go-swagger/go-swagger). You can use the `bin/build` file to generate the binary or directly use our swagger binary from `out` folder. 
+Assuming you have a valid [Golang 1.4.2](https://golang.org/dl/) or [later](https://golang.org/dl/) installed for your system, you can quickly get the version that we are using for go-swagger. This version is on [Github](https://github.com/midoblgsm/go-swagger). This is an extension of [go-swagger](https://github.com/go-swagger/go-swagger). You can use the `bin/build` file to generate the binary or directly use our swagger binary from `out` folder.
+
+The tests that we are generating are tested on [Go Service Broker](https://github.com/cloudfoundry-samples/go_service_broker). You need to follow the steps indicated in the README.md of the project to build the broker and run it.
+
 
 
 ### Cloning and Building
@@ -47,69 +50,57 @@ The executable output should now be located in: `out/i18n4go`. Place it wherever
 
 You can now use the `i18n4go` executable to issue some of the typical i18n tooling processes.
 
-### Running Tests
+### Generating and Running Tests
 -----------------
 
-You should run the tests to make sure all is well, do this with: `$ ./bin/test` in your cloned repository.
+You should generate the tests using the last API specification JSON file.
+You can do this with: `$ ./bin/generate_service_broker_test` in your cloned repository.
+This assumes that you already cloned and built go-swagger.
 
 The output should be similar to:
 
 ```
-$ bin/test
-
- Cleaning build artifacts...
+$ ./bin/generate_service_broker_test
+Swagger generating code
+======>  Adding TCK To TEST
+2015/09/17 17:30:03 rendered tck template: operationstck_reporter
+2015/09/17 17:30:03 rendered suite test template: operationsServiceBroker_suite_test
+2015/09/17 17:30:03 rendered test template: createServiceInstance
+2015/09/17 17:30:03 rendered test template: serviceBind
+2015/09/17 17:30:03 rendered test template: updateServiceInstance
+2015/09/17 17:30:03 rendered test template: deprovisionServiceInstance
+2015/09/17 17:30:04 rendered test template: serviceUnbind
+2015/09/17 17:30:04 rendered test template: catalog
+/Users/mohamed/Documents/git/swagger-bosh/src/github.com/maximilien/cf-swagger
 
  Formatting packages...
-
- Integration Testing packages:
-ok  	github.com/maximilien/i18n4go/integration/checkup	1.571s
-ok  	github.com/maximilien/i18n4go/integration/create_translations	1.542s
-ok  	github.com/maximilien/i18n4go/integration/extract_strings	1.694s
-ok  	github.com/maximilien/i18n4go/integration/fixup	1.657s
-ok  	github.com/maximilien/i18n4go/integration/merge_strings	1.645s
-ok  	github.com/maximilien/i18n4go/integration/rewrite_package	1.853s
-ok  	github.com/maximilien/i18n4go/integration/show_missing_strings	1.590s
-?   	github.com/maximilien/i18n4go/integration/test_helpers	[no test files]
-ok  	github.com/maximilien/i18n4go/integration/verify_strings	1.701s
-
- Vetting packages for potential issues...
-
-SWEET SUITE SUCCESS
 ```
 
 ### Running TCK
 ---------------
 
-You should run the tests to make sure all is well, do this with: `$ ./bin/test` in your cloned repository.
+You should run the tests to make sure all is well, do this with: `$ ./bin/run_service_broker_test` in your cloned repository.
 
-The output should be similar to:
+The end of the output should be similar to:
 
 ```
-$ bin/test
+$ ./bin/run_service_broker_test
 
- Cleaning build artifacts...
+...
 
- Formatting packages...
+Tck Compliance v2.6: 100.00 %!
+(MISSING)Cause(s) of the failure
 
- Integration Testing packages:
-ok  	github.com/maximilien/i18n4go/integration/checkup	1.571s
-ok  	github.com/maximilien/i18n4go/integration/create_translations	1.542s
-ok  	github.com/maximilien/i18n4go/integration/extract_strings	1.694s
-ok  	github.com/maximilien/i18n4go/integration/fixup	1.657s
-ok  	github.com/maximilien/i18n4go/integration/merge_strings	1.645s
-ok  	github.com/maximilien/i18n4go/integration/rewrite_package	1.853s
-ok  	github.com/maximilien/i18n4go/integration/show_missing_strings	1.590s
-?   	github.com/maximilien/i18n4go/integration/test_helpers	[no test files]
-ok  	github.com/maximilien/i18n4go/integration/verify_strings	1.701s
+Tck Compliance v2.5: 100.00 %!
+(MISSING)PASS | FOCUSED
 
- Vetting packages for potential issues...
-
-SWEET SUITE SUCCESS
+Ginkgo ran 1 suite in 2m31.720074275s
+Test Suite Passed
 ```
 
 ## Troubleshooting / FAQs
 -------------------------
-
+In order to quickly have the test pass, you can start by focusing on createService test, then bind service test. Other parts are being enhanced.
 None for now. Submit questions/comments as issues and we will update here
 
 ### Filing Bugs
