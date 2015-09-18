@@ -79,7 +79,7 @@ Swagger generating code
 ### Running TCK
 ---------------
 
-You should run the tests to make sure all is well, do this with: `$ ./bin/run_service_broker_test` in your cloned repository.
+You should run the tests against a service broker (we used [Go Service Broker](https://github.com/cloudfoundry-samples/go_service_broker)), do this with: `$ ./bin/run_service_broker_test` in your cloned repository.
 
 The end of the output should be similar to:
 
