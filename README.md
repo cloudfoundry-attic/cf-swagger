@@ -98,6 +98,24 @@ Ginkgo ran 1 suite in 2m31.720074275s
 Test Suite Passed
 ```
 
+You can modify the go_service_broker code to make it non compliant with v2.6 for testing purpose (making app_id required in bind method for example). You should build the broker again and restart it. Running the same test again will give the following output:
+
+```
+$ ./bin/run_service_broker_test
+
+...
+
+Tck Compliance v2.6: 97.14 %!
+(MISSING)Cause(s) of the failure
+#serviceBind when service...
+
+Tck Compliance v2.5: 100.00 %!
+(MISSING)PASS | FOCUSED
+
+Ginkgo ran 1 suite in 1m31.720074275s
+Test Suite Failed
+```
+
 ## Troubleshooting / FAQs
 -------------------------
 In order to quickly have the test pass, you can start by focusing on createService test, then bind service test. Other parts are being enhanced.
