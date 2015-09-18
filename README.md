@@ -24,13 +24,8 @@ Two additional ways, besides Gitter or Slack chat above, to contact us:
 ### Getting Started
 -------------------
 
-Assuming you have a valid [Golang 1.4.2](https://golang.org/dl/) or [later](https://golang.org/dl/) installed for your system, you can quickly get the latest `i18n4go` executable by running the following `go` command:
+Assuming you have a valid [Golang 1.4.2](https://golang.org/dl/) or [later](https://golang.org/dl/) installed for your system, you can quickly get the version that we are using for go-swagger. This version is on [Github](https://github.com/midoblgsm/go-swagger). This is an extension of [go-swagger](https://github.com/go-swagger/go-swagger). You can use the `bin/build` file to generate the binary or directly use our swagger binary from `out` folder. 
 
-```
-$ go get ...
-```
-
-TODO: add rest of how to get going
 
 ### Cloning and Building
 ------------------------
