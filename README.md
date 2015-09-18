@@ -115,10 +115,9 @@ Tck Compliance v2.5: 100.00 %!
 Ginkgo ran 1 suite in 1m31.720074275s
 Test Suite Failed
 ```
-
+In order to quickly have the test pass, you can start by focusing on createService test, then bind service test. Other parts are being enhanced.
 ## Troubleshooting / FAQs
 -------------------------
-In order to quickly have the test pass, you can start by focusing on createService test, then bind service test. Other parts are being enhanced.
 None for now. Submit questions/comments as issues and we will update here
 
 ### Filing Bugs
