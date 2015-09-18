@@ -36,19 +36,15 @@ The tests that we are generating are tested on [Go Service Broker](https://githu
 Clone this repo and build it. Using the following commands on a Linux or Mac OS X system:
 
 ```
-$ mkdir -p i18n4go/src/github.com/maximilien
-$ export GOPATH=$(pwd)/i18n4go:$GOPATH
-$ cd i18n4go/src/github.com/maximilien
-$ git clone https://github.com/maximilien/i18n4go.git
-$ cd i18n4go
+$ mkdir -p cf-swagger/src/github.com/maximilien
+$ export GOPATH=$(pwd)/cf-swagger:$GOPATH
+$ cd cf-swagger/src/github.com/maximilien
+$ git clone https://github.com/maximilien/cf-swagger.git
+$ cd cf-swagger
 $ ./bin/build
 ```
 
 NOTE: if you get any dependency errors, then use `go get path/to/dependency` to get it, e.g., `go get github.com/onsi/ginkgo` and `go get github.com/onsi/gomega`
-
-The executable output should now be located in: `out/i18n4go`. Place it wherever you want, e.g., `/usr/local/bin` on Linux or Mac OS X.
-
-You can now use the `i18n4go` executable to issue some of the typical i18n tooling processes.
 
 ### Generating and Running Tests
 -----------------
