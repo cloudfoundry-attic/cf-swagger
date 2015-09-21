@@ -20,14 +20,12 @@ Two additional ways, besides Gitter or Slack chat above, to contact us:
 
 * Overview presentation on September 16th, 2015. Slides ([PDF](https://github.com/maximilien/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pdf) and [PPTX](https://github.com/maximilien/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pptx)), [video](https://www.youtube.com/watch?v=N4DshPSn660)
 
-
 ### Getting Started
 -------------------
 
 Assuming you have a valid [Golang 1.4.2](https://golang.org/dl/) or [later](https://golang.org/dl/) installed for your system, you can quickly get the version that we are using for go-swagger. This version is on [Github](https://github.com/midoblgsm/go-swagger). This is an extension of [go-swagger](https://github.com/go-swagger/go-swagger). You can use the `bin/build` file to generate the binary or directly use our swagger binary from `out` folder.
 
-The tests that we are generating are tested on [Go Service Broker](https://github.com/cloudfoundry-samples/go_service_broker). You need to follow the steps indicated in the README.md of the project to build the broker and run it.
-
+The tests that we are generating are tested on [Go Service Broker](https://github.com/cloudfoundry-samples/go_service_broker). You need to follow the steps indicated in the [README.md](https://github.com/cloudfoundry-samples/go_service_broker/blob/master/README.md) of the project to build the broker and then run it.
 
 
 ### Cloning and Building
@@ -159,7 +157,7 @@ Optionally, you can use `bin/run` to compile and run the executable in one step.
 ## Contributing
 ---------------
 
-* We gratefully acknowledge and thank the [current contributors](https://github.com/maximilien/i18n4go/graphs/contributors)
+* We gratefully acknowledge and thank the [current contributors](https://github.com/maximilien/cf-swagger/graphs/contributors)
 * We welcome any and all contributions as Pull Requests (PR)
 * We also welcome issues and bug report and new feature request. We will address as time permits
 * Follow the steps above in Developing to get your system setup correctly
@@ -170,7 +168,7 @@ Optionally, you can use `bin/run` to compile and run the executable in one step.
 ## Managing dependencies
 -------------------------
 
-* All dependencies managed via [Godep](https://github.com/tools/godep). See [Godeps/_workspace](https://github.com/maximilien/i18n4go/tree/master/Godeps/_workspace) directory on master
+* All dependencies managed via [Godep](https://github.com/tools/godep). See [Godeps/_workspace](https://github.com/maximilien/cf-swagger/tree/master/Godeps/_workspace) directory on master
 
 ### Short `godep` Guide
 * If you ever import a new package `foo/bar` (after you `go get foo/bar`, so that foo/bar is in `$GOPATH`), you can type `godep save ./...` to add it to the `Godeps` directory.
