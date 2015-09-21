@@ -8,7 +8,7 @@ This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maxi
 Two additional ways, besides Gitter or Slack chat above, to contact us:
 
 1. Feel free to [open an issue (good or bad)](https://github.com/maximilien/i18n4go/issues) here on Github.
-2. Send email to `cloundfoundry.swagger` at the Gmail domain.
+2. Send email to `cloudfoundry.swagger` at the Gmail domain.
 
 ## Getting Started
 ------------------
