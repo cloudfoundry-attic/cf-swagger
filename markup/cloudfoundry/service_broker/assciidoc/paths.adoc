@@ -1,0 +1,201 @@
+== Paths
+=== Gets services registered within the broker
+----
+GET /catalog
+----
+
+==== Description
+:hardbreaks:
+The first endpoint that a broker must implement is the service catalog. Cloud Controller will initially fetch this endpoint from all brokers and make adjustments to the user-facing service catalog stored in the Cloud Controller database. 
+
+
+==== Responses
+[options="header"]
+|===
+|HTTP Code|Description|Schema
+|200|successful operation|<<CatalogServices>>
+|400|Invalid status value|No Content
+|===
+
+==== Produces
+
+* application/json
+
+==== Tags
+
+* catalog
+
+=== Provisions a service instance
+----
+PUT /service_instances/{instance_id}
+----
+
+==== Description
+:hardbreaks:
+When the broker receives a provision request from Cloud Controller, it should synchronously take whatever action is necessary to create a new service resource for the developer. The result of provisioning varies by service type, although there are a few common actions that work for many services.
+
+==== Parameters
+[options="header"]
+|===
+|Type|Name|Description|Required|Schema|Default
+|BodyParameter|service|Service information.|true|<<Service>>|
+|===
+
+==== Responses
+[options="header"]
+|===
+|HTTP Code|Description|Schema
+|200|May be returned if the service instance already exists and the requested parameters are identical to the existing service instance. The expected response body is below.|<<Dashboard_url>>
+|201|Service instance has been created.|<<Dashboard_url>>
+|409|Should be returned if the requested service instance already exists. The expected response body is {}|<<Empty>>
+|===
+
+==== Consumes
+
+* application/json
+
+==== Produces
+
+* application/json
+
+==== Tags
+
+* service_instances
+
+=== Deprovisions a service instance.
+----
+DELETE /service_instances/{instance_id}
+----
+
+==== Description
+:hardbreaks:
+When a broker receives a deprovision request from Cloud Controller, it should delete any resources it created during the provision. Usually this means that all resources are immediately reclaimed for future provisions.
+
+==== Parameters
+[options="header"]
+|===
+|Type|Name|Description|Required|Schema|Default
+|BodyParameter|deprovisionParameters|Parameters to identify the service to be deprovisioned|true|<<UnbindParameters>>|
+|===
+
+==== Responses
+[options="header"]
+|===
+|HTTP Code|Description|Schema
+|200|Service instance was deleted. The expected response body is {}.|<<Empty>>
+|410|Should be returned if the binding does not exist. The expected response body is {}.|<<Empty>>
+|===
+
+==== Produces
+
+* application/json
+
+==== Tags
+
+* service_instances
+
+=== Updating a Service Instance
+----
+PATCH /service_instances/{instance_id}
+----
+
+==== Description
+:hardbreaks:
+Brokers that implement this endpoint can enable users to modify attributes of an existing service instance. The first attribute Cloud Foundry supports users modifying is the service plan. This effectively enables users to upgrade or downgrade their service instance to other plans. To see how users make these requests, [see Managing Services](https://docs.cloudfoundry.org/devguide/services/managing-services.html#update_service).
+
+==== Parameters
+[options="header"]
+|===
+|Type|Name|Description|Required|Schema|Default
+|BodyParameter|plan|New Plan information.|true|<<ServicePlan>>|
+|===
+
+==== Responses
+[options="header"]
+|===
+|HTTP Code|Description|Schema
+|200|New plan is effective. The expected response body is {}.|<<Empty>>
+|422|May be returned if the particular plan change requested is not supported or if the request can not currently be fulfilled due to the state of the instance (eg. instance utilization is over the quota of the requested plan). Broker should include a user-facing message in the body; for details [see Broker Errors](https://docs.cloudfoundry.org/services/api.html#broker-errors).|object
+|===
+
+==== Consumes
+
+* application/json
+
+==== Produces
+
+* application/json
+
+==== Tags
+
+* service_instances
+
+=== Binds to a service
+----
+PUT /service_instances/{instance_id}/service_bindings/{binding_id}
+----
+
+==== Description
+:hardbreaks:
+When the broker receives a bind request from the Cloud Controller, it should return information which helps an application to utilize the provisioned resource. This information is generically referred to as credentials. Applications should be issued unique credentials whenever possible, so one application access can be revoked without affecting other bound applications. For more information on credentials, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).
+
+==== Parameters
+[options="header"]
+|===
+|Type|Name|Description|Required|Schema|Default
+|BodyParameter|binding||true|<<Binding>>|
+|===
+
+==== Responses
+[options="header"]
+|===
+|HTTP Code|Description|Schema
+|200|May be returned if the binding already exists and the requested parameters are identical to the existing binding.|<<BindingResponse>>
+|201|Binding has been created.|<<BindingResponse>>
+|409|Should be returned if the requested binding already exists. The expected response body is {}, though the description field can be used to return a user-facing error message, as described in Broker Errors.|<<Empty>>
+|===
+
+==== Consumes
+
+* application/json
+
+==== Produces
+
+* application/json
+
+==== Tags
+
+* service_instances
+
+=== Unbinds a service
+----
+DELETE /service_instances/{instance_id}/service_bindings/{binding_id}
+----
+
+==== Description
+:hardbreaks:
+When a broker receives an unbind request from Cloud Controller, it should delete any resources it created in bind. Usually this means that an application immediately cannot access the resource.
+
+==== Parameters
+[options="header"]
+|===
+|Type|Name|Description|Required|Schema|Default
+|BodyParameter|UnbindParameters||true|<<UnbindParameters>>|
+|===
+
+==== Responses
+[options="header"]
+|===
+|HTTP Code|Description|Schema
+|200|Binding was deleted. The expected response body is {}.|<<Empty>>
+|410|Should be returned if the binding does not exist. The expected response body is {}.|<<Empty>>
+|===
+
+==== Produces
+
+* application/json
+
+==== Tags
+
+* service_instances
+

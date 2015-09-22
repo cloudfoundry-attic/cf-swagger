@@ -1,0 +1,191 @@
+== Definitions
+=== CatalogServices
+:hardbreaks:
+list of services
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|services||false|<<Services>> array|
+|===
+
+=== Services
+:hardbreaks:
+Schema of a service object
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|id|An identifier used to correlate this service in future requests to the catalog. This must be unique within Cloud Foundry, using a GUID is recommended.
+|false|string|
+|name|The CLI-friendly name of the service that will appear in the catalog. All lowercase, no spaces.|false|string|
+|description|A short description of the service that will appear in the catalog.|false|string|
+|bindable|Whether the service can be bound to applications.|false|boolean|
+|tags|Tags provide a flexible mechanism to expose a classification, attribute, or base technology of a service, enabling equivalent services to be swapped out without changes to dependent logic in applications, buildpacks, or other services. E.g. mysql, relational, redis, key-value, caching, messaging, amqp.
+|false|string array|
+|metadata|A list of metadata for a service offering. For more information, see [Service Metadata](https://docs.cloudfoundry.org/services/catalog-metadata.html).|false|<<Meta_data>>|
+|requires|A list of permissions that the user would have to give the service, if they provision it. The only permission currently supported is syslog_drain; for more info [see Application Log Streaming](https://docs.cloudfoundry.org/services/app-log-streaming.html).|false|string array|
+|plan_updateable|Whether the service supports upgrade/downgrade for some plans. Please note that the misspelling of the attribute plan_updatable to plan_updateable was done by mistake. We have opted to keep that misspelling instead of fixing it and thus breaking backward compatibility.|false|boolean|
+|plans|A list of plans for this service|false|<<Plan>> array|
+|dashboard_client|Contains the data necessary to activate the [Dashboard SSO feature](https://docs.cloudfoundry.org/services/dashboard-sso.html) for this service|false|<<Dashboard_client>>|
+|===
+
+=== Plan
+:hardbreaks:
+A plan for the service
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|id|An identifier used to correlate this plan in future requests to the catalog. This must be unique within Cloud Foundry, using a GUID is recommended.|false|string|
+|name|The CLI-friendly name of the plan that will appear in the catalog. All lowercase, no spaces.|false|string|
+|description|A short description of the service that will appear in the catalog.|false|string|
+|metadata|A list of metadata for a service plan. For more information, [see Service Metadata](https://docs.cloudfoundry.org/services/catalog-metadata.html).|false|object|
+|free|This field allows the plan to be limited by the non_basic_services_allowed field in a Cloud Foundry Quota, [see Quota Plans](http://docs.cloudfoundry.org/running/managing-cf/quota-plans.html).|false|boolean|
+|===
+
+=== Dashboard_client
+:hardbreaks:
+Contains the data necessary to activate the [Dashboard SSO feature](https://docs.cloudfoundry.org/services/dashboard-sso.html) for this service
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|id|The id of the Oauth2 client that the service intends to use. The name may be taken, in which case the API will return an error to the operator|false|string|
+|secret|A secret for the dashboard client|false|string|
+|redirect_uri|A domain for the service dashboard that will be whitelisted by the UAA to enable SSO|false|string|
+|===
+
+=== Service
+:hardbreaks:
+Service object
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|service_id|The ID of the service within the catalog above. While not strictly necessary, some brokers might make use of this ID.|false|string|
+|plan_id|The ID of the plan within the above service (from the catalog endpoint) that the user would like provisioned. Because plans have identifiers unique to a broker, this is enough information to determine what to provision.|false|string|
+|organization_guid|The Cloud Controller GUID of the organization under which the service is to be provisioned. Although most brokers will not use this field, it could be helpful in determining data placement or applying custom business rules.|false|string|
+|space_guid|Similar to organization_guid, but for the space.|false|string|
+|parameteres|Cloud Foundry API clients can provide a JSON object of configuration parameters with their request and this value will be passed through to the service broker. Brokers are responsible for validation.|false|<<Parameter>>|
+|===
+
+=== Dashboard_url
+:hardbreaks:
+The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed ( in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html).
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|dashboard_url|The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html).|false|string|
+|===
+
+=== Empty
+:hardbreaks:
+Expected empty response could be {}
+
+=== ServicePlan
+:hardbreaks:
+New Plan to be added to a service.
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|plan_id|ID of the new plan from the catalog.|false|string|
+|parameters|Cloud Foundry API clients can provide a JSON object of configuration parameters with their request and this value will be passed through to the service broker. Brokers are responsible for validation.|false|<<Parameter>>|
+|previous_values|Information about the instance prior to the update.|false|<<PreviousValues>>|
+|===
+
+=== PreviousValues
+:hardbreaks:
+Information about the instance prior to the update.
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|plan_id|ID of the plan prior to the update.|false|string|
+|service_id|ID of the service for the instance.|false|string|
+|organization_id|ID of the organization containing the instance.|false|string|
+|space_id|ID of the space containing the instance.|false|string|
+|===
+
+=== Parameter
+:hardbreaks:
+A key value parameters
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|name|Name of the parameter|false|string|
+|value|value of the parameter|false|object|
+|===
+
+=== Binding
+:hardbreaks:
+Information to bind the service to an application.
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|app_guid|GUID of the application that you want to bind your service to. Will be included when users bind applications to service instances.|false|string|
+|plan_id|ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.|false|string|
+|service_id|ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.|false|string|
+|parameters|Cloud Foundry API clients can provide a JSON object of configuration parameters with their request and this value will be passed through to the service broker. Brokers are responsible for validation.|false|<<Parameter>>|
+|===
+
+=== BindingResponse
+:hardbreaks:
+Success binding response.
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|credentials|A free-form hash of credentials that the bound application can use to access the service. For more information, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).|false|object|
+|syslog_drain_url|A URL to which Cloud Foundry should drain logs for the bound application. requires syslog_drain must be declared in the catalog endpoint or Cloud Foundry will consider the response invalid. For details, [see Application Log Streaming](https://docs.cloudfoundry.org/services/app-log-streaming.html).|false|string|
+|===
+
+=== Meta_data
+:hardbreaks:
+metadata related to the service
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|displayName|displayName of the service.|false|string|
+|listing|Listing.|false|<<Listing>>|
+|provider|Provider of the service.|false|<<Provider>>|
+|===
+
+=== Listing
+:hardbreaks:
+Listing.
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|blurb|blurb|false|string|
+|imageUrl|image URL.|false|string|
+|longDescription|Long Description|false|string|
+|===
+
+=== Provider
+:hardbreaks:
+Provider
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|name|Provider Name|false|string|
+|===
+
+=== UnbindParameters
+:hardbreaks:
+Parameters needed to unbind a service instance
+
+[options="header"]
+|===
+|Name|Description|Required|Schema|Default
+|service_id|ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.|false|string|
+|plan_id|ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.|false|string|
+|===
+
