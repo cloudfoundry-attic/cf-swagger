@@ -1,7 +1,7 @@
 CF-Swagger [![Build Status](https://travis-ci.org/maximilien/cf-swagger.svg?branch=master)](https://travis-ci.org/maximilien/cf-swagger#) [![Join the chat at https://gitter.im/maximilien/cf-swagger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/maximilien/cf-swagger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ==============================
 
-Collection of Swagger descriptions and applications for CloudFoundry APIs
+Collection of [Swagger](https://swagger.io/) descriptions and applications for CloudFoundry APIs.
 
 This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maximilien/i18n4go/blob/master/LICENSE). We'd love to hear from you if you are using, attempting to use, or planning to use this tool. 
 
