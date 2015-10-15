@@ -1,13 +1,13 @@
-CF-Swagger [![Build Status](https://travis-ci.org/maximilien/cf-swagger.svg?branch=master)](https://travis-ci.org/maximilien/cf-swagger#) [![Join the chat at https://gitter.im/maximilien/cf-swagger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/maximilien/cf-swagger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+CF-Swagger [![Build Status](https://travis-ci.org/cloudfoundry-incubator/cf-swagger.svg?branch=master)](https://travis-ci.org/cloudfoundry-incubator/cf-swagger#) [![Join the chat at https://gitter.im/cloudfoundry-incubator/cf-swagger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/maximilien/cf-swagger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ==============================
 
 Collection of [Swagger](https://swagger.io/) descriptions and applications for CloudFoundry APIs.
 
-This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maximilien/i18n4go/blob/master/LICENSE). We'd love to hear from you if you are using, attempting to use, or planning to use this tool. 
+This tool is licensed under the [Apache 2.0 OSS license](https://github.com/cloudfoundry-incubator/i18n4go/blob/master/LICENSE). We'd love to hear from you if you are using, attempting to use, or planning to use this tool. 
 
 Two additional ways, besides Gitter or Slack chat above, to contact us:
 
-1. Feel free to [open an issue (good or bad)](https://github.com/maximilien/i18n4go/issues) here on Github.
+1. Feel free to [open an issue (good or bad)](https://github.com/cloudfoundry-incubator/i18n4go/issues) here on Github.
 2. Send email to `cloudfoundry.swagger` at the Gmail domain.
 
 ## Getting Started
@@ -16,7 +16,7 @@ Two additional ways, besides Gitter or Slack chat above, to contact us:
 ### Overview Presentations, Talks, Blogs
 ----------------------------------------
 
-* Overview presentation on September 16th, 2015. Slides ([PDF](https://github.com/maximilien/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pdf) and [PPTX](https://github.com/maximilien/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pptx)), [video](https://www.youtube.com/watch?v=N4DshPSn660)
+* Overview presentation on September 16th, 2015. Slides ([PDF](https://github.com/cloudfoundry-incubator/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pdf) and [PPTX](https://github.com/cloudfoundry-incubator/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pptx)), [video](https://www.youtube.com/watch?v=N4DshPSn660)
 
 ### Getting Started
 -------------------
