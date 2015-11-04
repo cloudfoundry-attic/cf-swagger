@@ -1,0 +1,291 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0",
+        "title": "Abacus API description",
+        "description": "The Abacus Usage Metering and Aggregation REST API can be used by Cloud resource providers to submit usage data, usage dashboards to retrieve real time usage reports, and billing systems to retrieve the aggregated and rated usage data needed for billing. Cloud resources include services and application runtimes or containers for example. Usage data is exchanged with Abacus in the form of usage documents. Each document type has a JSON representation and one or more REST methods. [Learn more about the Abacus API.](https://github.com/cloudfoundry-incubator/cf-abacus/blob/master/doc/api.md)"
+    },
+    "host": "localhost",
+    "basePath": "/v1",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/metering/collected/usage": {
+            "post": {
+                "operationId": "insert",
+                "summary": "Records the resource usage document and processes the Cloud resource usage data it contains.",
+                "tags": [
+                    "resourceUsage"
+                ],
+                "description": "The resource usage collection API can be used by Cloud resource providers to submit usage for instances of Cloud resources, including service instances and application runtimes or containers. Usage can be submitted by POSTing resource usage documents to Abacus.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "usage",
+                        "description": "Resource usage contains usage measurements for one or more Cloud resources.",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Usage"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Indicates success with the URL of the resource usage document in a Location header",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Reports an invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Reports a server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/metering/collected/usage/{usage_document_id}": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/usage_document_id"
+                }
+            ],
+            "get": {
+                "operationId": "getResourceUsage",
+                "summary": "Retrieves a previously submitted resource usage document",
+                "tags": [
+                    "resourceUsage"
+                ],
+                "description": "The first endpoint that a broker must implement is the service catalog. Cloud Controller will initially fetch this endpoint from all brokers and make adjustments to the user-facing service catalog stored in the Cloud Controller database. \n",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Usage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid status value"
+                    }
+                }
+            }
+        },
+        "/provisioning/resources/{resource_id}/config/{time}": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/resource_id"
+                },
+                {
+                    "$ref": "#/parameters/time"
+                }
+            ],
+            "get": {
+                "operationId": "getConfiguration",
+                "summary": "Retrieves the configuration of a specified resource effective at a specified time.",
+                "tags": [
+                    "configuration"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Configuration"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "usage_document_id": {
+            "name": "usage_document_id",
+            "description": "The usage_document_id that refers to a given document containing resource usage.",
+            "type": "string",
+            "in": "path",
+            "required": true
+        },
+        "resource_id": {
+            "name": "resource_id",
+            "description": "The resource_id refers to a resource that we want to get usage data",
+            "type": "string",
+            "in": "path",
+            "required": true
+        },
+        "time": {
+            "name": "time",
+            "description": "The specific time for resource configuration",
+            "type": "string",
+            "in": "path",
+            "required": true
+        }
+    },
+    "definitions": {
+        "Usage": {
+            "description": "Resource usage contains usage measurements for one or more Cloud resources.",
+            "properties": {
+                "usage": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/UsageItem"
+                    }
+                }
+            }
+        },
+        "UsageItem": {
+            "description": "It contains a usage measurement for one or more Cloud resources.",
+            "properties": {
+                "start": {
+                    "description": "Start time",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "end": {
+                    "description": "Start time",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "organization_id": {
+                    "description": "Organization ID",
+                    "type": "string"
+                },
+                "space_id": {
+                    "description": "Space ID",
+                    "type": "string"
+                },
+                "consumer_id": {
+                    "description": "Consumer ID",
+                    "type": "string"
+                },
+                "resource_id": {
+                    "description": "Resource ID",
+                    "type": "string"
+                },
+                "plan_id": {
+                    "description": "Plan ID",
+                    "type": "string"
+                },
+                "resource_instance_id": {
+                    "description": "Resource Instance ID",
+                    "type": "string"
+                },
+                "measured_usage": {
+                    "description": "Array of measured usages",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MeasuredUsage"
+                    }
+                }
+            }
+        },
+        "MeasuredUsage": {
+            "description": "A measurement for a particular metric",
+            "properties": {
+                "measure": {
+                    "description": "The metric name",
+                    "type": "string"
+                },
+                "quantity": {
+                    "description": "Value of the measured metric",
+                    "type": "string"
+                }
+            }
+        },
+        "Configuration": {
+            "description": "configuration",
+            "properties": {
+                "resource_id": {
+                    "description": "Resource ID",
+                    "type": "string"
+                },
+                "effective": {
+                    "description": "Effective",
+                    "type": "number"
+                },
+                "measures": {
+                    "description": "Array of measures",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Measure"
+                    }
+                },
+                "metrics": {
+                    "description": "Array of metrics",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Metric"
+                    }
+                }
+            }
+        },
+        "Measure": {
+            "description": "Measure",
+            "properties": {
+                "name": {
+                    "description": "Metric name",
+                    "type": "string"
+                },
+                "unit": {
+                    "description": "Unit",
+                    "type": "string"
+                }
+            }
+        },
+        "Metric": {
+            "description": "Metric",
+            "properties": {
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                },
+                "unit": {
+                    "description": "Unit",
+                    "type": "string"
+                },
+                "meter": {
+                    "description": "Meter",
+                    "type": "string"
+                },
+                "accumulate": {
+                    "description": "Accumulate",
+                    "type": "string"
+                },
+                "aggregate": {
+                    "description": "Aggregate",
+                    "type": "string"
+                },
+                "rate": {
+                    "description": "Rate",
+                    "type": "string"
+                },
+                "summarize": {
+                    "description": "Summarize",
+                    "type": "string"
+                },
+                "charge": {
+                    "description": "Charge",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
