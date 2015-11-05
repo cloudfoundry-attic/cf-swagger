@@ -74,14 +74,23 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation",
+                        "description": "Indicates successful operation with the requested resource usage document",
                         "schema": {
                             "type": "object",
                             "$ref": "#/definitions/Usage"
                         }
                     },
-                    "400": {
-                        "description": "Invalid status value"
+                    "404": {
+                        "description": "Indicates that the usage is not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates a server error",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -101,15 +110,151 @@
                 "tags": [
                     "configuration"
                 ],
+                "description": "The resource configuration API is used by Abacus to retrieve resource configuration documents for Cloud resources. Resource configuration documents. This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store resource configuration documents describing its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make these documents available to Abacus at an API endpoint supporting this GET method.",
                 "produces": [
                     "application/json"
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok",
+                        "description": "Indicates success with the requested resource configuration document",
                         "schema": {
                             "type": "object",
                             "$ref": "#/definitions/Configuration"
+                        }
+                    },
+                    "404": {
+                        "description": "Indicates that the configuration was not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates a server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/pricing/resources/{resource_id}/config/{time}": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/resource_id"
+                },
+                {
+                    "$ref": "#/parameters/time"
+                }
+            ],
+            "get": {
+                "operationId": "getPricing",
+                "summary": "Retrieves the pricing of the specified Cloud resource effective at the specified time.",
+                "tags": [
+                    "configuration"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "description": "The resource pricing API is used by Abacus to retrieve resource pricing data for Cloud resources.  Different prices can be defined for different countries. This API defines the contract between Abacus and the Cloud platform integrating it. The Cloud platform can manage and store resource pricing data for its Cloud resources in a platform specific way outside of Abacus, and is simply expected to make the pricing data available to Abacus at an API endpoint supporting this GET method.",
+                "responses": {
+                    "200": {
+                        "description": "Indicates success with the requested resource configuration document",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Pricing"
+                        }
+                    },
+                    "404": {
+                        "description": "Indicates that the configuration was not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates a server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/metering/organizations/{organization_id}/aggregated/usage/{time}": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/organization_id"
+                },
+                {
+                    "$ref": "#/parameters/time"
+                }
+            ],
+            "get": {
+                "operationId": "getUsageReport",
+                "summary": "Retrieves a usage report document incurred by the specified organization at the specified time.",
+                "tags": [
+                    "usageReport"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "description": "The usage summary report API can be used to retrieve aggregated usage summary report documents from Abacus. This operation retrieves a usage report document containing a summary of the aggregated Cloud resource usage incurred by the specified organization at the specified time.",
+                "responses": {
+                    "200": {
+                        "description": "Indicates success with a usage summary report JSON document",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/OrganizationReport"
+                        }
+                    },
+                    "404": {
+                        "description": "Indicates that the usage was not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates a server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/metering/aggregated/usage/graph/{query}": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/query"
+                }
+            ],
+            "get": {
+                "operationId": "getGraphQuery",
+                "summary": "Retrieves a report document containing a summary of the Cloud resource usage matching the specified GraphQL query.",
+                "tags": [
+                    "graphUsage"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "description": "The GraphQL usage query API can be used to query aggregated usage using the GraphQL query language. Abacus defines a GraphQL schema for aggregated usage, allowing users to navigate and query the graph of aggregated usage within organizations and the spaces and resources they contain using the GraphQL query language. [See the GraphQL documentation for more information on the GraphQL schema and query languages.](https://github.com/facebook/graphql)",
+                "responses": {
+                    "200": {
+                        "description": "Indicates success with a usage summary report JSON document",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/GraphQL"
+                        }
+                    },
+                    "404": {
+                        "description": "Indicates that the usage was not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Indicates a server error",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
@@ -131,9 +276,23 @@
             "in": "path",
             "required": true
         },
+        "organization_id": {
+            "name": "organization_id",
+            "description": "The Organization ID",
+            "type": "string",
+            "in": "path",
+            "required": true
+        },
         "time": {
             "name": "time",
             "description": "The specific time for resource configuration",
+            "type": "string",
+            "in": "path",
+            "required": true
+        },
+        "query": {
+            "name": "query",
+            "description": "A graph of aggregated usage within organizations and the spaces and resources they contain using the GraphQL query language.",
             "type": "string",
             "in": "path",
             "required": true
@@ -156,13 +315,13 @@
             "properties": {
                 "start": {
                     "description": "Start time",
-                    "type": "string",
-                    "format": "date-time"
+                    "type": "integer",
+                    "format": "utc-millisec"
                 },
                 "end": {
                     "description": "Start time",
-                    "type": "string",
-                    "format": "date-time"
+                    "type": "integer",
+                    "format": "utc-millisec"
                 },
                 "organization_id": {
                     "description": "Organization ID",
@@ -211,7 +370,7 @@
             }
         },
         "Configuration": {
-            "description": "configuration",
+            "description": "It describes the types of measurements, metrics, units, and metering, aggregation, rating and reporting formulas that must be used by Abacus to meter, rate, and report usage for each type of Cloud resource",
             "properties": {
                 "resource_id": {
                     "description": "Resource ID",
@@ -286,6 +445,261 @@
                     "type": "string"
                 }
             }
+        },
+        "Pricing": {
+            "description": "Resource pricing are used to configure the prices of the metrics used to meter Cloud resources.",
+            "properties": {
+                "resource_id": {
+                    "description": "The resource ID",
+                    "type": "string"
+                },
+                "effective": {
+                    "description": "Effective",
+                    "type": "string"
+                },
+                "plans": {
+                    "description": "Plans",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Plan"
+                    }
+                }
+            }
+        },
+        "Plan": {
+            "description": "Plan",
+            "properties": {
+                "plan_id": {
+                    "description": "Plan ID",
+                    "type": "string"
+                },
+                "metrics": {
+                    "description": "Array of metrics of the plan",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PlanMetric"
+                    }
+                }
+            }
+        },
+        "PlanMetric": {
+            "description": "Price Metric",
+            "properties": {
+                "name": {
+                    "description": "Name",
+                    "type": "string"
+                },
+                "prices": {
+                    "description": "Prices per country",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Price"
+                    }
+                }
+            }
+        },
+        "Price": {
+            "description": "Price",
+            "properties": {
+                "country": {
+                    "description": "Country",
+                    "type": "string"
+                },
+                "price": {
+                    "description": "Price",
+                    "type": "number"
+                }
+            }
+        },
+        "OrganizationReport": {
+            "description": "It contains a summary of the aggregated Cloud resource usage incurred by the specified organization at the specified time",
+            "properties": {
+                "start": {
+                    "description": "start time",
+                    "type": "integer",
+                    "format": "utc-millisec"
+                },
+                "end": {
+                    "description": "end time",
+                    "type": "integer",
+                    "format": "utc-millisec"
+                },
+                "processed": {
+                    "description": "processed",
+                    "type": "integer",
+                    "format": "utc-millisec"
+                },
+                "organization_id": {
+                    "description": "organization_id",
+                    "type": "string"
+                },
+                "charge": {
+                    "description": "Charge",
+                    "type": "number"
+                },
+                "id": {
+                    "description": "ID",
+                    "type": "string"
+                },
+                "spaces": {
+                    "description": "Spaces",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Space"
+                    }
+                },
+                "resources": {
+                    "description": "Resources",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Resource"
+                    }
+                }
+            }
+        },
+        "Space": {
+            "description": "Space",
+            "properties": {
+                "space_id": {
+                    "description": "Space ID",
+                    "type": "string"
+                },
+                "charge": {
+                    "description": "charge for the space",
+                    "type": "number"
+                },
+                "consumers": {
+                    "description": "Consumers",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Consumer"
+                    }
+                },
+                "resources": {
+                    "description": "Resources",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Resource"
+                    }
+                }
+            }
+        },
+        "Consumer": {
+            "description": "Consumer",
+            "properties": {
+                "consumer_id": {
+                    "description": "Consumer ID",
+                    "type": "string"
+                },
+                "charge": {
+                    "description": "Charge for the consumer",
+                    "type": "number"
+                },
+                "resources": {
+                    "description": "Resources",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Resource"
+                    }
+                }
+            }
+        },
+        "Resource": {
+            "description": "Resource",
+            "properties": {
+                "resource_id": {
+                    "description": "Resource ID",
+                    "type": "string"
+                },
+                "charge": {
+                    "description": "Charge for the resource",
+                    "type": "number"
+                },
+                "aggregated_usage": {
+                    "description": "Aggregated usage",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AggregatedUsage"
+                    }
+                },
+                "plans": {
+                    "description": "Plans",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PlanUsage"
+                    }
+                }
+            }
+        },
+        "AggregatedUsage": {
+            "description": "Aggregated usage item",
+            "properties": {
+                "metric": {
+                    "description": "metric name",
+                    "type": "string"
+                },
+                "quantity": {
+                    "description": "quantity",
+                    "type": "number"
+                },
+                "summary": {
+                    "description": "summary",
+                    "type": "number"
+                },
+                "charge": {
+                    "description": "charge",
+                    "type": "number"
+                }
+            }
+        },
+        "PlanUsage": {
+            "description": "Plan usage",
+            "properties": {
+                "plan_id": {
+                    "description": "Plan ID",
+                    "type": "string"
+                },
+                "charge": {
+                    "description": "Charge for the plan",
+                    "type": "number"
+                },
+                "aggregated_usage": {
+                    "description": "Aggregated usage for the plan",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AggregatedPlanUsage"
+                    }
+                }
+            }
+        },
+        "AggregatedPlanUsage": {
+            "description": "Aggregated usage item",
+            "properties": {
+                "metric": {
+                    "description": "metric name",
+                    "type": "string"
+                },
+                "quantity": {
+                    "description": "quantity",
+                    "type": "number"
+                },
+                "summary": {
+                    "description": "summary",
+                    "type": "number"
+                },
+                "cost": {
+                    "description": "cost",
+                    "type": "number"
+                },
+                "charge": {
+                    "description": "charge",
+                    "type": "number"
+                }
+            }
+        },
+        "GraphQL": {
+            "description": "GraphQl",
+            "type": "object"
         }
     }
 }
