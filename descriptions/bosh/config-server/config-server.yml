@@ -1,0 +1,105 @@
+swagger: '2.0'
+info:
+  title: Config Server
+  description: BOSH config server REST APIs
+  version: "0.1.0"
+host: api.bosh.io
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /data/someKeyPath:
+    get:
+      summary: returns the config data added
+      description: |
+        whenever Director needs to retrieve a value it will use GET action.
+      parameters:
+        - name: someKeyPath
+          in: query
+          description: the path to the key to retrieve.
+          required: true
+          type: string
+      responses:
+        200:
+          description: the JSON that was added for that path
+          schema:
+            $ref: '#/definitions/Data'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: deletes the value associated with this path
+      description: user can delete config values
+      parameters:
+        - name: someKeyPath
+          in: query
+          description: the path to the key to retrieve.
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: updates the config data associated with someKeyPath
+      description: manual config value update
+      parameters:
+        - name: someKeyPath
+          in: query
+          description: the path to the key to retrieve.
+          required: true
+          type: string
+        - name: request
+          in: body
+          description: the data to update
+          required: true
+          schema:
+            $ref: '#/definitions/Data'
+      responses:
+        200:
+          description: OK
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: creates the config data associated with someKeyPath
+      description: whenever Director generates a value it will be saved into the config server
+      parameters:
+        - name: someKeyPath
+          in: query
+          description: the path to the key to retrieve.
+          required: true
+          type: string
+        - name: request
+          in: body
+          description: the data to update
+          required: true
+          schema:
+            $ref: '#/definitions/Data'
+      responses:
+        200:
+          description: OK
+definitions:
+  Data:
+    type: object
+    description: the value for the data
+    properties:
+      type:
+        type: string
+        description: the string name of the type for the value 
+  Error:
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
