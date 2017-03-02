@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: '2.5'
+  version: '2.11'
   title: Service Broker API
   description: >
     The Cloud Foundry services API defines the contract between the Cloud
@@ -33,11 +33,13 @@ paths:
             $ref: '#/definitions/CatalogServices'
         '400':
           description: Invalid status value
-  '/service_instances/{instance_id}':
+  '/service_instances/{instance_id}/{last_operation}':
     parameters:
       - $ref: '#/parameters/instance_id'
+      - $ref: '#/parameters/last_operation'
     put:
       operationId: createServiceInstance
+      x-version: "2.11"
       produces:
         - application/json
       consumes:
@@ -59,7 +61,7 @@ paths:
           description: May be returned if the service instance already exists and the requested parameters are identical to the existing service instance. The expected response body is below.
           schema:
             type: object
-            $ref: '#/definitions/Dashboard_url'
+            $ref: '#/definitions/OperationState'
         '201':
           description: Service instance has been created.
           schema:
@@ -70,8 +72,19 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/Empty'
+        '410':
+          description: 'Appropriate only for asynchronous delete operations. The platform should consider this response a success and remove the resource from its database. The expected response body is {}. Returning this while the platform is polling for create or update operations should be interpreted as an invalid response and the platform should continue polling.'
+          schema:
+            type: object
+            $ref: '#/definitions/Empty'
+        '422':
+          description: 'Should be returned if the broker only supports asynchronous provisioning for the requested plan and the request did not include ?accepts_incomplete=true. The expected response body is: { "error": "AsyncRequired", "description": "This service plan requires client support for asynchronous service operations." }, as described below.'
+          schema:
+            type: object
+            $ref: '#/definitions/Error'
     patch:
       operationId: updateServiceInstance
+      x-version: "2.11"
       summary: Updating a Service Instance
       description: 'Brokers that implement this endpoint can enable users to modify attributes of an existing service instance. The first attribute Cloud Foundry supports users modifying is the service plan. This effectively enables users to upgrade or downgrade their service instance to other plans. To see how users make these requests, [see Managing Services](https://docs.cloudfoundry.org/devguide/services/managing-services.html#update_service).'
       consumes:
@@ -225,9 +238,6 @@ definitions:
       description:
         type: string
         description: A short description of the service that will appear in the catalog.
-      bindable:
-        type: boolean
-        description: Whether the service can be bound to applications.
       tags:
         type: array
         description: >
@@ -247,6 +257,9 @@ definitions:
         description: 'A list of permissions that the user would have to give the service, if they provision it. The only permission currently supported is syslog_drain; for more info [see Application Log Streaming](https://docs.cloudfoundry.org/services/app-log-streaming.html).'
         items:
           type: string
+      bindable:
+        type: boolean
+        description: 'Specifies whether instances of the service can be bound to applications. This specifies the default for all plans of this service. Plans can override this field.'
       plan_updateable:
         type: boolean
         description: Whether the service supports upgrade/downgrade for some plans. Please note that the misspelling of the attribute plan_updatable to plan_updateable was done by mistake. We have opted to keep that misspelling instead of fixing it and thus breaking backward compatibility.
@@ -277,6 +290,9 @@ definitions:
       free:
         type: boolean
         description: 'This field allows the plan to be limited by the non_basic_services_allowed field in a Cloud Foundry Quota, [see Quota Plans](http://docs.cloudfoundry.org/running/managing-cf/quota-plans.html).'
+      bindable:
+        type: boolean
+        description: 'Specifies whether instances of the service plan can be bound to applications. This field is optional. If specified, this takes precedence over the bindable attribute of the service. If not specified, the default is derived from the service.'
   Dashboard_client:
     description: 'Contains the data necessary to activate the [Dashboard SSO feature](https://docs.cloudfoundry.org/services/dashboard-sso.html) for this service'
     properties:
@@ -303,11 +319,14 @@ definitions:
         description: 'The Cloud Controller GUID of the organization under which the service is to be provisioned. Although most brokers will not use this field, it could be helpful in determining data placement or applying custom business rules.'
       space_guid:
         type: string
-        description: 'Similar to organization_guid, but for the space.'
+        description: 'Similar to organization_guid, but for the space.'      
       parameteres:
         type: object
         $ref: '#/definitions/Parameter'
         description: Cloud Foundry API clients can provide a JSON object of configuration parameters with their request and this value will be passed through to the service broker. Brokers are responsible for validation.
+      accepts_incomplete:
+        type: boolean
+        description: 'A value of true indicates that the marketplace and its clients support asynchronous broker operations. If this parameter is not included in the request, and the broker can only provision an instance of the requested plan asynchronously, the broker should reject the request with a 422 as described below.'        
   Dashboard_url:
     description: "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed ( in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
     properties:
@@ -398,26 +417,44 @@ definitions:
     description: Listing.
     properties:
       blurb:
+        type: string
         description: blurb
-        type: string
       imageUrl:
+        type: string
         description: image URL.
-        type: string
       longDescription:
-        description: Long Description
         type: string
+        description: Long Description
   Provider:
     description: Provider
     properties:
       name:
-        description: Provider Name
         type: string
+        description: Provider Name
+  Error:
+    description: 'Error processing asynchronous operations'
+    properties:
+      error:
+        type: string
+        description: the error name
+      description:
+        type: string
+        description: the description of the error
   UnbindParameters:
-   description: Parameters needed to unbind a service instance
-   properties:
-    service_id:
-     type: string
-     description: 'ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.'
-    plan_id:
-     type: string
-     description: 'ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.'
+    description: Parameters needed to unbind a service instance
+    properties:
+      service_id:
+        type: string
+        description: 'ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.'
+      plan_id:
+        type: string
+        description: 'ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.'
+  OperationState:
+    description: 'Response for the current state of an operation'
+    properties:
+      state:
+        type: string
+        description: 'Valid values are in progress, succeeded, and failed. While "state": "in progress", the platform should continue polling. A response with "state": "succeeded" or "state": "failed" should cause the platform to cease polling.'
+      description:
+        type: string
+        description: 'Optional field. A user-facing message displayed to the platform API client. Can be used to tell the user details about the status of the operation.'
