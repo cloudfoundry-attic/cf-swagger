@@ -2,110 +2,106 @@ swagger: '2.0'
 info:
   version: '2.11'
   title: Service Broker API
-  description: >
+  description: |
     The Cloud Foundry services API defines the contract between the Cloud
-    Controller and the service broker. The broker is expected to implement
-    several HTTP (or HTTPS) endpoints underneath a URI prefix. One or more
-    services can be provided by a single broker, and load balancing enables
-    horizontal scalability of redundant brokers. Multiple Cloud Foundry instances
-    can be supported by a single broker using different URL prefixes and
-    credentials. [Learn more about the Service Broker
-    API.](http://docs.cloudfoundry.org/services/api.html)
-host: '127.0.0.1:8888'
+    Controller and the service broker. The broker is expected to 
+    implement several HTTP (or HTTPS) endpoints underneath a URI prefix. 
+    One or more services can be provided by a single broker, and load
+    balancing enables horizontal scalability of redundant brokers. 
+    Multiple Cloud Foundry instances can be supported by a single broker 
+    using different URL prefixes and credentials. [Learn more about 
+    the Service Broker API.](http://docs.cloudfoundry.org/services/api.html)
+
+host: 127.0.0.1:8888
 basePath: /v2
 schemes:
-  - http
+- http
 paths:
   /catalog:
     get:
       operationId: catalog
       summary: Gets services registered within the broker
       tags:
-        - catalog
-      description: "The first endpoint that a broker must implement is the service catalog. Cloud Controller will initially fetch this endpoint from all brokers and make adjustments to the user-facing service catalog stored in the Cloud Controller database. \n"
+      - catalog
+      description: |
+        The first endpoint that a broker must implement is 
+        the service catalog. Cloud Controller will initially fetch this 
+        endpoint from all brokers and make adjustments to the user-facing
+        service catalog stored in the Cloud Controller database.
       produces:
-        - application/json
+      - application/json
       responses:
         '200':
           description: successful operation
           schema:
-            type: object
             $ref: '#/definitions/CatalogServices'
         '400':
           description: Invalid status value
-  '/service_instances/{instance_id}/{last_operation}':
+  /service_instances/{instance_id}/{last_operation}:
     parameters:
-      - $ref: '#/parameters/instance_id'
-      - $ref: '#/parameters/last_operation'
+    - $ref: '#/parameters/instance_id'
+    - $ref: '#/parameters/last_operation'
     put:
       operationId: createServiceInstance
-      x-version: "2.11"
+      x-version: '2.11'
       produces:
-        - application/json
+      - application/json
       consumes:
-        - application/json
+      - application/json
       tags:
-        - service_instances
+      - service_instances
       description: 'When the broker receives a provision request from Cloud Controller, it should synchronously take whatever action is necessary to create a new service resource for the developer. The result of provisioning varies by service type, although there are a few common actions that work for many services.'
       summary: Provisions a service instance
       parameters:
-        - name: service
-          required: true
-          description: Service information.
-          in: body
-          schema:
-            type: object
-            $ref: '#/definitions/Service'
+      - name: service
+        required: true
+        description: Service information.
+        in: body
+        schema:
+          $ref: '#/definitions/Service'
       responses:
         '200':
-          description: May be returned if the service instance already exists and the requested parameters are identical to the existing service instance. The expected response body is below.
+          description: 'May be returned if the service instance already exists and the requested parameters are identical to the existing service instance. The expected response body is below.'
           schema:
-            type: object
             $ref: '#/definitions/OperationState'
         '201':
           description: Service instance has been created.
           schema:
-            type: object
             $ref: '#/definitions/Dashboard_url'
         '409':
           description: 'Should be returned if the requested service instance already exists. The expected response body is {}'
           schema:
-            type: object
             $ref: '#/definitions/Empty'
         '410':
           description: 'Appropriate only for asynchronous delete operations. The platform should consider this response a success and remove the resource from its database. The expected response body is {}. Returning this while the platform is polling for create or update operations should be interpreted as an invalid response and the platform should continue polling.'
           schema:
-            type: object
             $ref: '#/definitions/Empty'
         '422':
-          description: 'Should be returned if the broker only supports asynchronous provisioning for the requested plan and the request did not include ?accepts_incomplete=true. The expected response body is: { "error": "AsyncRequired", "description": "This service plan requires client support for asynchronous service operations." }, as described below.'
+          description: 'Should be returned if the broker only supports asynchronous provisioning for the requested plan and the request did not include ?accepts_incomplete=true. The expected response body is: { error: AsyncRequired, description: This service plan requires client support for asynchronous service operations. }, as described below.'
           schema:
-            type: object
             $ref: '#/definitions/Error'
     patch:
       operationId: updateServiceInstance
-      x-version: "2.11"
+      x-version: '2.11'
       summary: Updating a Service Instance
       description: 'Brokers that implement this endpoint can enable users to modify attributes of an existing service instance. The first attribute Cloud Foundry supports users modifying is the service plan. This effectively enables users to upgrade or downgrade their service instance to other plans. To see how users make these requests, [see Managing Services](https://docs.cloudfoundry.org/devguide/services/managing-services.html#update_service).'
       consumes:
-        - application/json
+      - application/json
       produces:
-        - application/json
+      - application/json
       tags:
-        - service_instances
+      - service_instances
       parameters:
-        - name: plan
-          description: New Plan information.
-          required: true
-          in: body
-          schema:
-            type: object
-            $ref: '#/definitions/ServicePlan'
+      - name: plan
+        description: New Plan information.
+        required: true
+        in: body
+        schema:
+          $ref: '#/definitions/ServicePlan'
       responses:
         '200':
-          description: 'New plan is effective. The expected response body is {}.'
+          description: New plan is effective. The expected response body is {}.
           schema:
-            type: object
             $ref: '#/definitions/Empty'
         '422':
           description: 'May be returned if the particular plan change requested is not supported or if the request can not currently be fulfilled due to the state of the instance (eg. instance utilization is over the quota of the requested plan). Broker should include a user-facing message in the body; for details [see Broker Errors](https://docs.cloudfoundry.org/services/api.html#broker-errors).'
@@ -116,93 +112,89 @@ paths:
       summary: Deprovisions a service instance.
       description: 'When a broker receives a deprovision request from Cloud Controller, it should delete any resources it created during the provision. Usually this means that all resources are immediately reclaimed for future provisions.'
       produces:
-        - application/json
+      - application/json
       tags:
-        - service_instances
+      - service_instances
       parameters:
-        - name: deprovisionParameters
-          required: true
-          in: body
-          description: Parameters to identify the service to be deprovisioned
-          schema:
-           type: object
-           $ref: '#/definitions/UnbindParameters'
+      - name: deprovisionParameters
+        required: true
+        in: body
+        description: Parameters to identify the service to be deprovisioned
+        schema:
+          $ref: '#/definitions/UnbindParameters'
       responses:
         '200':
-          description: 'Service instance was deleted. The expected response body is {}.'
+          description: Service instance was deleted. The expected response body is {}.
           schema:
-            type: object
             $ref: '#/definitions/Empty'
         '410':
           description: 'Should be returned if the binding does not exist. The expected response body is {}.'
           schema:
-            type: object
             $ref: '#/definitions/Empty'
-  '/service_instances/{instance_id}/service_bindings/{binding_id}':
+  /service_instances/{instance_id}/service_bindings/{binding_id}:
     parameters:
-      - $ref: '#/parameters/instance_id'
-      - $ref: '#/parameters/binding_id'
+    - $ref: '#/parameters/instance_id'
+    - $ref: '#/parameters/binding_id'
     put:
       operationId: serviceBind
-      x-version: "2.6"
+      x-version: '2.6'
       summary: Binds to a service
       description: 'When the broker receives a bind request from the Cloud Controller, it should return information which helps an application to utilize the provisioned resource. This information is generically referred to as credentials. Applications should be issued unique credentials whenever possible, so one application access can be revoked without affecting other bound applications. For more information on credentials, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).'
       produces:
-        - application/json
+      - application/json
       consumes:
-        - application/json
+      - application/json
       tags:
-        - service_instances
+      - service_instances
       parameters:
-        - name: binding
-          required: true
-          in: body
-          schema:
-            type: object
-            $ref: '#/definitions/Binding'
+      - name: binding
+        required: true
+        in: body
+        schema:
+          $ref: '#/definitions/Binding'
       responses:
         '200':
-          description: May be returned if the binding already exists and the requested parameters are identical to the existing binding.
+          description: 'May be returned if the binding already exists and the requested parameters are identical to the existing binding.'
           schema:
-            type: object
             $ref: '#/definitions/BindingResponse'
         '201':
           description: Binding has been created.
           schema:
-            type: object
             $ref: '#/definitions/BindingResponse'
         '409':
           description: 'Should be returned if the requested binding already exists. The expected response body is {}, though the description field can be used to return a user-facing error message, as described in Broker Errors.'
           schema:
-            type: object
             $ref: '#/definitions/Empty'
     delete:
       operationId: serviceUnbind
       summary: Unbinds a service
       description: 'When a broker receives an unbind request from Cloud Controller, it should delete any resources it created in bind. Usually this means that an application immediately cannot access the resource.'
       produces:
-        - application/json
+      - application/json
       tags:
-        - service_instances
+      - service_instances
       parameters:
-        - name: UnbindParameters
-          in: body
-          required: true
-          schema:
-           type: object
-           $ref: '#/definitions/UnbindParameters'
+      - name: UnbindParameters
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UnbindParameters'
       responses:
         '200':
-          description: 'Binding was deleted. The expected response body is {}.'
+          description: Binding was deleted. The expected response body is {}.
           schema:
-            type: object
             $ref: '#/definitions/Empty'
         '410':
           description: 'Should be returned if the binding does not exist. The expected response body is {}.'
           schema:
-            type: object
             $ref: '#/definitions/Empty'
 parameters:
+  # this is missing!
+  last_operation:
+    name: last_operation
+    in: path
+    required: true
+    type: string
   instance_id:
     name: instance_id
     description: 'The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.'
@@ -228,30 +220,21 @@ definitions:
     properties:
       id:
         type: string
-        description: >
-          An identifier used to correlate this service in future requests to the
-          catalog. This must be unique within Cloud Foundry, using a GUID is
-          recommended.
+        description: 'An identifier used to correlate this service in future requests to the catalog. This must be unique within Cloud Foundry, using a GUID is recommended.'
       name:
         type: string
-        description: 'The CLI-friendly name of the service that will appear in the catalog. All lowercase, no spaces.'
+        description: The CLI-friendly name of the service that will appear in the
+          catalog. All lowercase, no spaces.
       description:
         type: string
         description: A short description of the service that will appear in the catalog.
       tags:
         type: array
-        description: >
-          Tags provide a flexible mechanism to expose a classification,
-          attribute, or base technology of a service, enabling equivalent
-          services to be swapped out without changes to dependent logic in
-          applications, buildpacks, or other services. E.g. mysql, relational,
-          redis, key-value, caching, messaging, amqp.
+        description: 'Tags provide a flexible mechanism to expose a classification, attribute, or base technology of a service, enabling equivalent services to be swapped out without changes to dependent logic in applications, buildpacks, or other services. E.g. mysql, relational, redis, key-value, caching, messaging, amqp.'
         items:
           type: string
       metadata:
-        type: object
         $ref: '#/definitions/Meta_data'
-        description: 'A list of metadata for a service offering. For more information, see [Service Metadata](https://docs.cloudfoundry.org/services/catalog-metadata.html).'
       requires:
         type: array
         description: 'A list of permissions that the user would have to give the service, if they provision it. The only permission currently supported is syslog_drain; for more info [see Application Log Streaming](https://docs.cloudfoundry.org/services/app-log-streaming.html).'
@@ -259,7 +242,9 @@ definitions:
           type: string
       bindable:
         type: boolean
-        description: 'Specifies whether instances of the service can be bound to applications. This specifies the default for all plans of this service. Plans can override this field.'
+        description: Specifies whether instances of the service can be bound to applications.
+          This specifies the default for all plans of this service. Plans can override
+          this field.
       plan_updateable:
         type: boolean
         description: Whether the service supports upgrade/downgrade for some plans. Please note that the misspelling of the attribute plan_updatable to plan_updateable was done by mistake. We have opted to keep that misspelling instead of fixing it and thus breaking backward compatibility.
@@ -269,36 +254,38 @@ definitions:
         items:
           $ref: '#/definitions/Plan'
       dashboard_client:
-        type: object
-        description: 'Contains the data necessary to activate the [Dashboard SSO feature](https://docs.cloudfoundry.org/services/dashboard-sso.html) for this service'
         $ref: '#/definitions/Dashboard_client'
   Plan:
     description: A plan for the service
     properties:
       id:
         type: string
-        description: 'An identifier used to correlate this plan in future requests to the catalog. This must be unique within Cloud Foundry, using a GUID is recommended.'
+        description: An identifier used to correlate this plan in future requests
+          to the catalog. This must be unique within Cloud Foundry, using a GUID is
+          recommended.
       name:
         type: string
-        description: 'The CLI-friendly name of the plan that will appear in the catalog. All lowercase, no spaces.'
+        description: The CLI-friendly name of the plan that will appear in the catalog.
+          All lowercase, no spaces.
       description:
         type: string
         description: A short description of the service that will appear in the catalog.
       metadata:
         type: object
-        description: 'A list of metadata for a service plan. For more information, [see Service Metadata](https://docs.cloudfoundry.org/services/catalog-metadata.html).'
+        description: A list of metadata for a service plan. For more information, [see Service Metadata](https://docs.cloudfoundry.org/services/catalog-metadata.html).
       free:
         type: boolean
-        description: 'This field allows the plan to be limited by the non_basic_services_allowed field in a Cloud Foundry Quota, [see Quota Plans](http://docs.cloudfoundry.org/running/managing-cf/quota-plans.html).'
+        description: This field allows the plan to be limited by the non_basic_services_allowed field in a Cloud Foundry Quota, [see Quota Plans](http://docs.cloudfoundry.org/running/managing-cf/quota-plans.html).
       bindable:
         type: boolean
-        description: 'Specifies whether instances of the service plan can be bound to applications. This field is optional. If specified, this takes precedence over the bindable attribute of the service. If not specified, the default is derived from the service.'
+        description: Specifies whether instances of the service plan can be bound to applications. This field is optional. If specified, this takes precedence over the bindable attribute of the service. If not specified, the default is derived from the service.
   Dashboard_client:
-    description: 'Contains the data necessary to activate the [Dashboard SSO feature](https://docs.cloudfoundry.org/services/dashboard-sso.html) for this service'
+    description: Contains the data necessary to activate the [Dashboard SSO feature](https://docs.cloudfoundry.org/services/dashboard-sso.html)
+      for this service
     properties:
       id:
         type: string
-        description: 'The id of the Oauth2 client that the service intends to use. The name may be taken, in which case the API will return an error to the operator'
+        description: The id of the Oauth2 client that the service intends to use. The name may be taken, in which case the API will return an error to the operator
       secret:
         type: string
         description: A secret for the dashboard client
@@ -310,32 +297,30 @@ definitions:
     properties:
       service_id:
         type: string
-        description: 'The ID of the service within the catalog above. While not strictly necessary, some brokers might make use of this ID.'
+        description: The ID of the service within the catalog above. While not strictly necessary, some brokers might make use of this ID.
       plan_id:
         type: string
-        description: 'The ID of the plan within the above service (from the catalog endpoint) that the user would like provisioned. Because plans have identifiers unique to a broker, this is enough information to determine what to provision.'
+        description: The ID of the plan within the above service (from the catalog endpoint) that the user would like provisioned. Because plans have identifiers unique to a broker, this is enough information to determine what to provision.
       organization_guid:
         type: string
-        description: 'The Cloud Controller GUID of the organization under which the service is to be provisioned. Although most brokers will not use this field, it could be helpful in determining data placement or applying custom business rules.'
+        description: The Cloud Controller GUID of the organization under which the service is to be provisioned. Although most brokers will not use this field, it could be helpful in determining data placement or applying custom business rules.
       space_guid:
         type: string
-        description: 'Similar to organization_guid, but for the space.'      
+        description: Similar to organization_guid, but for the space.
       parameteres:
-        type: object
         $ref: '#/definitions/Parameter'
-        description: Cloud Foundry API clients can provide a JSON object of configuration parameters with their request and this value will be passed through to the service broker. Brokers are responsible for validation.
       accepts_incomplete:
         type: boolean
-        description: 'A value of true indicates that the marketplace and its clients support asynchronous broker operations. If this parameter is not included in the request, and the broker can only provision an instance of the requested plan asynchronously, the broker should reject the request with a 422 as described below.'        
+        description: A value of true indicates that the marketplace and its clients support asynchronous broker operations. If this parameter is not included in the request, and the broker can only provision an instance of the requested plan asynchronously, the broker should reject the request with a 422 as described below.
   Dashboard_url:
-    description: "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed ( in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
+    description: The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html).
     properties:
       dashboard_url:
         type: string
-        description: "The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html)."
+        description: The URL of a web-based management user interface for the service instance; we refer to this as a service dashboard. The URL should contain enough information for the dashboard to identify the resource being accessed (in the example below). For information on how users can authenticate with service dashboards via SSO, [see Dashboard Single Sign-On](https://docs.cloudfoundry.org/services/dashboard-sso.html).
   Empty:
     type: string
-    description: 'Expected empty response could be {}'
+    description: Expected empty response could be {}
   ServicePlan:
     description: New Plan to be added to a service.
     properties:
@@ -343,12 +328,8 @@ definitions:
         type: string
         description: ID of the new plan from the catalog.
       parameters:
-        type: object
         $ref: '#/definitions/Parameter'
-        description: Cloud Foundry API clients can provide a JSON object of configuration parameters with their request and this value will be passed through to the service broker. Brokers are responsible for validation.
       previous_values:
-        type: object
-        description: Information about the instance prior to the update.
         $ref: '#/definitions/PreviousValues'
   PreviousValues:
     description: Information about the instance prior to the update.
@@ -382,23 +363,21 @@ definitions:
         description: GUID of the application that you want to bind your service to. Will be included when users bind applications to service instances.
       plan_id:
         type: string
-        description: 'ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.'
+        description: ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.
       service_id:
         type: string
-        description: 'ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.'
+        description: ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.
       parameters:
-        type: object
         $ref: '#/definitions/Parameter'
-        description: Cloud Foundry API clients can provide a JSON object of configuration parameters with their request and this value will be passed through to the service broker. Brokers are responsible for validation.
   BindingResponse:
     description: Success binding response.
     properties:
       credentials:
         type: object
-        description: 'A free-form hash of credentials that the bound application can use to access the service. For more information, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).'
+        description: A free-form hash of credentials that the bound application can use to access the service. For more information, [see Binding Credentials](https://docs.cloudfoundry.org/services/binding-credentials.html).
       syslog_drain_url:
         type: string
-        description: 'A URL to which Cloud Foundry should drain logs for the bound application. requires syslog_drain must be declared in the catalog endpoint or Cloud Foundry will consider the response invalid. For details, [see Application Log Streaming](https://docs.cloudfoundry.org/services/app-log-streaming.html).'
+        description: A URL to which Cloud Foundry should drain logs for the bound application. requires syslog_drain must be declared in the catalog endpoint or Cloud Foundry will consider the response invalid. For details, [see Application Log Streaming](https://docs.cloudfoundry.org/services/app-log-streaming.html).
   Meta_data:
     description: metadata related to the service
     properties:
@@ -406,12 +385,8 @@ definitions:
         type: string
         description: displayName of the service.
       listing:
-        type: object
-        description: Listing.
         $ref: '#/definitions/Listing'
       provider:
-        type: object
-        description: Provider of the service.
         $ref: '#/definitions/Provider'
   Listing:
     description: Listing.
@@ -432,7 +407,7 @@ definitions:
         type: string
         description: Provider Name
   Error:
-    description: 'Error processing asynchronous operations'
+    description: Error processing asynchronous operations
     properties:
       error:
         type: string
@@ -445,16 +420,18 @@ definitions:
     properties:
       service_id:
         type: string
-        description: 'ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.'
+        description: ID of the service from the catalog. While not strictly necessary, some brokers might make use of this ID.
       plan_id:
         type: string
-        description: 'ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.'
+        description: ID of the plan from the catalog. While not strictly necessary, some brokers might make use of this ID.
   OperationState:
-    description: 'Response for the current state of an operation'
+    description: Response for the current state of an operation
     properties:
       state:
         type: string
-        description: 'Valid values are in progress, succeeded, and failed. While "state": "in progress", the platform should continue polling. A response with "state": "succeeded" or "state": "failed" should cause the platform to cease polling.'
+        description: 'Valid values are in progress, succeeded, and failed. While state:
+          in progress, the platform should continue polling. A response with state:
+          succeeded or state: failed should cause the platform to cease polling.'
       description:
         type: string
-        description: 'Optional field. A user-facing message displayed to the platform API client. Can be used to tell the user details about the status of the operation.'
+        description: Optional field. A user-facing message displayed to the platform API client. Can be used to tell the user details about the status of the operation.
