@@ -10,15 +10,15 @@ basePath: /v1
 produces:
   - application/json
 paths:
-  /data/someKeyPath:
+  /data/id:
     get:
-      summary: returns the config data added
+      summary: returns the config data added with id
       description: |
         whenever Director needs to retrieve a value it will use GET action.
       parameters:
-        - name: someKeyPath
+        - name: id
           in: query
-          description: the path to the key to retrieve.
+          description: the id of the key to retrieve.
           required: true
           type: string
       responses:
@@ -26,6 +26,22 @@ paths:
           description: the JSON that was added for that path
           schema:
             $ref: '#/definitions/Data'
+        400:
+          description: Bad request
+          schema:
+            $ref: '#/definitions/Error'
+        401:
+          description: Not authorized
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: Name not found
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/Error'
         default:
           description: Unexpected error
           schema:
