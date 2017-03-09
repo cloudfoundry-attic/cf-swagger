@@ -16,7 +16,7 @@ Two additional ways, besides Gitter or Slack chat above, to contact us:
 ### Overview Presentations, Talks, Blogs
 ----------------------------------------
 
-* Overview presentation on September 16th, 2015. Slides ([PDF](https://github.com/cloudfoundry-incubator/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pdf) and [PPTX](https://github.com/cloudfoundry-incubator/presentations/blob/master/2015/cf-swagger/releases/cf-swagger-v0.7.0.pptx)), [video](https://www.youtube.com/watch?v=N4DshPSn660)
+* Overview presentation on September 16th, 2015. Slides ([PDF](https://github.com/cloudfoundry-incubator/cf-swagger/blob/master/presentations/2016/releases/cf-swagger-cf-summit.pdf) and [PPTX]https://github.com/cloudfoundry-incubator/cf-swagger/blob/master/presentations/2016/releases/cf-swagger-cf-summit.pptx)), [video](https://www.youtube.com/watch?v=N4DshPSn660)
 
 ### Getting Started
 -------------------
