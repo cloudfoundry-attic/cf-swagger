@@ -2,7 +2,7 @@
   "name": "cf-swagger",
   "git_url": "https://github.com/cloudfoundry-incubator/cf-swagger",
   "tracker_url": "",
-  "description": "A collection of Swagger (Open APIs) description of public CloudFoundry component’s APIs. ",
+  "description": "Collection of Swagger (Open APIs) description of public CloudFoundry component’s APIs. ",
   "owner_company": "IBM",
   "contact_email": "Michael Maximilien <maxim@us.ibm.com>",
   "status": "Incubating",
