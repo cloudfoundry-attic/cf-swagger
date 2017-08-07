@@ -1,11 +1,7 @@
 {
-  "name": "cf-swagger",
-  "git_url": "https://github.com/cloudfoundry-incubator/cf-swagger",
   "tracker_url": "",
   "description": "Collection of Swagger (Open APIs) description of public CloudFoundry component’s APIs. ",
   "owner_company": "IBM",
   "contact_email": "Michael Maximilien <maxim@us.ibm.com>",
-  "status": "Incubating",
-  "proposed_date": "2015-09-03T12:00:00Z07:00",
-  "status_changed_date": "2017-03-02T12:00:00Z07:00"
+  "proposed_date": "2015-09-03T12:00:00Z07:00"
 }
