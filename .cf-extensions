@@ -3,5 +3,5 @@
   "description": "Collection of Swagger (Open APIs) description of public CloudFoundry component’s APIs. ",
   "lead_company": "IBM",
   "contact_email": "Michael Maximilien <maxim@us.ibm.com>",
-  "proposed_date": "2015-09-03T12:00:00Z07:00"
+  "proposed_date": "2015-09-03T12:00:00Z"
 }
